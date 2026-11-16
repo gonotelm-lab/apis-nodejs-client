@@ -1,6 +1,7 @@
 repo=gonotelm-lab/apis
-sha=8386ba950d1033d9354d9409d3b0f028a8b7fb88
+sha=f4c2be954e436b7b0d9c48531880aaf54983d204
+short_sha=f4c2be9
 ref=main
-pr=3
-pr_url=https://github.com/gonotelm-lab/apis/pull/3
-commit_url=https://github.com/gonotelm-lab/apis/commit/8386ba950d1033d9354d9409d3b0f028a8b7fb88
+commit_url=https://github.com/gonotelm-lab/apis/commit/f4c2be9
+pr=4
+pr_url=https://github.com/gonotelm-lab/apis/pull/4
