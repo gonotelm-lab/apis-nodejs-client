@@ -20,6 +20,10 @@
       "import": { "types": "./dist/esm/index.d.ts", "default": "./dist/esm/index.js" },
       "require": { "types": "./dist/cjs/index.d.ts", "default": "./dist/cjs/index.js" }
     },
+    "./callback": {
+      "import": { "types": "./dist/esm/callback.d.ts", "default": "./dist/esm/callback.js" },
+      "require": { "types": "./dist/cjs/callback.d.ts", "default": "./dist/cjs/callback.js" }
+    },
     "./apps/*": {
       "import": { "types": "./dist/esm/apps/*.d.ts", "default": "./dist/esm/apps/*.js" },
       "require": { "types": "./dist/cjs/apps/*.d.ts", "default": "./dist/cjs/apps/*.js" }
@@ -32,11 +36,14 @@
     "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
     "build": "npm run clean && node scripts/build-index.mjs && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json && node scripts/postbuild.mjs",
     "typecheck": "tsc -p tsconfig.json",
+    "test": "node --test",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.0.0",
-    "@grpc/grpc-js": "^1.12.0"
+    "@grpc/grpc-js": "^1.12.0",
+    "nice-grpc": "^2.2.0",
+    "nice-grpc-common": "^2.0.4"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

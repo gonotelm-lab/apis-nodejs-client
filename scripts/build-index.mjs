@@ -8,8 +8,13 @@ const files = readdirSync(join(src, "apps"), { recursive: true })
   .map((file) => file.split("\\").join("/"))
   .sort();
 
-const body = files
+const generated = files
   .map((file) => `export * from "./apps/${file.replace(/\.ts$/, ".js")}";`)
   .join("\n");
 
-writeFileSync(join(src, "index.ts"), `${body}\n`);
+// `promise.ts` is hand-written scaffold, not generated. It is appended here so
+// the root entry always exposes the nice-grpc client factory.
+writeFileSync(
+  join(src, "index.ts"),
+  `${[generated, 'export * from "./promise.js";'].filter(Boolean).join("\n")}\n`,
+);

@@ -3,19 +3,19 @@
 //   protoc-gen-ts_proto  v2.18.1
 //   protoc               unknown
 // source: apps/notelm/admin/identity/v1/identity_service.proto
-/* eslint-disable */
-import { makeGenericClientConstructor, } from "@grpc/grpc-js";
 import { GetUserRequest, GetUserResponse } from "./user.js";
-export const IdentityServiceService = {
-    getUser: {
-        path: "/apps.notelm.admin.identity.v1.IdentityService/GetUser",
-        requestStream: false,
-        responseStream: false,
-        requestSerialize: (value) => Buffer.from(GetUserRequest.encode(value).finish()),
-        requestDeserialize: (value) => GetUserRequest.decode(value),
-        responseSerialize: (value) => Buffer.from(GetUserResponse.encode(value).finish()),
-        responseDeserialize: (value) => GetUserResponse.decode(value),
+export const IdentityServiceDefinition = {
+    name: "IdentityService",
+    fullName: "apps.notelm.admin.identity.v1.IdentityService",
+    methods: {
+        getUser: {
+            name: "GetUser",
+            requestType: GetUserRequest,
+            requestStream: false,
+            responseType: GetUserResponse,
+            responseStream: false,
+            options: {},
+        },
     },
 };
-export const IdentityServiceClient = makeGenericClientConstructor(IdentityServiceService, "apps.notelm.admin.identity.v1.IdentityService");
 //# sourceMappingURL=identity_service.js.map

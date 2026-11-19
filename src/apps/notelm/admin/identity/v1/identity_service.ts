@@ -5,60 +5,37 @@
 // source: apps/notelm/admin/identity/v1/identity_service.proto
 
 /* eslint-disable */
-import {
-  type CallOptions,
-  type ChannelCredentials,
-  Client,
-  type ClientOptions,
-  type ClientUnaryCall,
-  type handleUnaryCall,
-  makeGenericClientConstructor,
-  type Metadata,
-  type ServiceError,
-  type UntypedServiceImplementation,
-} from "@grpc/grpc-js";
+import type { CallContext, CallOptions } from "nice-grpc-common";
 import { GetUserRequest, GetUserResponse } from "./user.js";
 
-export type IdentityServiceService = typeof IdentityServiceService;
-export const IdentityServiceService = {
-  getUser: {
-    path: "/apps.notelm.admin.identity.v1.IdentityService/GetUser" as const,
-    requestStream: false as const,
-    responseStream: false as const,
-    requestSerialize: (value: GetUserRequest): Buffer => Buffer.from(GetUserRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer): GetUserRequest => GetUserRequest.decode(value),
-    responseSerialize: (value: GetUserResponse): Buffer => Buffer.from(GetUserResponse.encode(value).finish()),
-    responseDeserialize: (value: Buffer): GetUserResponse => GetUserResponse.decode(value),
+export type IdentityServiceDefinition = typeof IdentityServiceDefinition;
+export const IdentityServiceDefinition = {
+  name: "IdentityService",
+  fullName: "apps.notelm.admin.identity.v1.IdentityService",
+  methods: {
+    getUser: {
+      name: "GetUser",
+      requestType: GetUserRequest as typeof GetUserRequest,
+      requestStream: false,
+      responseType: GetUserResponse as typeof GetUserResponse,
+      responseStream: false,
+      options: {},
+    },
   },
 } as const;
 
-export interface IdentityServiceServer extends UntypedServiceImplementation {
-  getUser: handleUnaryCall<GetUserRequest, GetUserResponse>;
+export interface IdentityServiceImplementation<CallContextExt = {}> {
+  getUser(request: GetUserRequest, context: CallContext & CallContextExt): Promise<DeepPartial<GetUserResponse>>;
 }
 
-export interface IdentityServiceClient extends Client {
-  getUser(
-    request: GetUserRequest,
-    callback: (error: ServiceError | null, response: GetUserResponse) => void,
-  ): ClientUnaryCall;
-  getUser(
-    request: GetUserRequest,
-    metadata: Metadata,
-    callback: (error: ServiceError | null, response: GetUserResponse) => void,
-  ): ClientUnaryCall;
-  getUser(
-    request: GetUserRequest,
-    metadata: Metadata,
-    options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: GetUserResponse) => void,
-  ): ClientUnaryCall;
+export interface IdentityServiceClient<CallOptionsExt = {}> {
+  getUser(request: DeepPartial<GetUserRequest>, options?: CallOptions & CallOptionsExt): Promise<GetUserResponse>;
 }
 
-export const IdentityServiceClient = makeGenericClientConstructor(
-  IdentityServiceService,
-  "apps.notelm.admin.identity.v1.IdentityService",
-) as unknown as {
-  new (address: string, credentials: ChannelCredentials, options?: Partial<ClientOptions>): IdentityServiceClient;
-  service: typeof IdentityServiceService;
-  serviceName: string;
-};
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
+type DeepPartial<T> = T extends Builtin ? T
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : Partial<T>;

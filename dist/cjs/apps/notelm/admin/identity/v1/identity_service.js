@@ -5,20 +5,20 @@
 //   protoc               unknown
 // source: apps/notelm/admin/identity/v1/identity_service.proto
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.IdentityServiceClient = exports.IdentityServiceService = void 0;
-/* eslint-disable */
-const grpc_js_1 = require("@grpc/grpc-js");
+exports.IdentityServiceDefinition = void 0;
 const user_js_1 = require("./user.js");
-exports.IdentityServiceService = {
-    getUser: {
-        path: "/apps.notelm.admin.identity.v1.IdentityService/GetUser",
-        requestStream: false,
-        responseStream: false,
-        requestSerialize: (value) => Buffer.from(user_js_1.GetUserRequest.encode(value).finish()),
-        requestDeserialize: (value) => user_js_1.GetUserRequest.decode(value),
-        responseSerialize: (value) => Buffer.from(user_js_1.GetUserResponse.encode(value).finish()),
-        responseDeserialize: (value) => user_js_1.GetUserResponse.decode(value),
+exports.IdentityServiceDefinition = {
+    name: "IdentityService",
+    fullName: "apps.notelm.admin.identity.v1.IdentityService",
+    methods: {
+        getUser: {
+            name: "GetUser",
+            requestType: user_js_1.GetUserRequest,
+            requestStream: false,
+            responseType: user_js_1.GetUserResponse,
+            responseStream: false,
+            options: {},
+        },
     },
 };
-exports.IdentityServiceClient = (0, grpc_js_1.makeGenericClientConstructor)(exports.IdentityServiceService, "apps.notelm.admin.identity.v1.IdentityService");
 //# sourceMappingURL=identity_service.js.map

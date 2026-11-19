@@ -185,10 +185,10 @@ export const Timestamp: MessageFns<Timestamp> = {
     return timestampToJson(globalThis.Number(message.seconds ?? 0), message.nanos ?? 0);
   },
 
-  create<I extends Exact<DeepPartial<Timestamp>, I>>(base?: I): Timestamp {
-    return Timestamp.fromPartial(base ?? ({} as any));
+  create(base?: DeepPartial<Timestamp>): Timestamp {
+    return Timestamp.fromPartial(base ?? {});
   },
-  fromPartial<I extends Exact<DeepPartial<Timestamp>, I>>(object: I): Timestamp {
+  fromPartial(object: DeepPartial<Timestamp>): Timestamp {
     const message = createBaseTimestamp();
     message.seconds = object.seconds ?? 0;
     message.nanos = object.nanos ?? 0;
@@ -203,13 +203,6 @@ type DeepPartial<T> = T extends Builtin ? T
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
-
-type KeysOfUnion<T> = T extends T ? keyof T : never;
-type Exact<P, I> = P extends Builtin ? P
-  :
-    & P
-    & { [K in keyof P as Extract<K, keyof I>]: Exact<P[K], I[K & keyof I]> }
-    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 const timestampJsonRegex = /^.+T\d{2}:\d{2}:\d{2}(\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/;
 
@@ -257,6 +250,6 @@ interface MessageFns<T> {
   decode(input: BinaryReader | Uint8Array, length?: number): T;
   fromJSON(object: any): T;
   toJSON(message: T): unknown;
-  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
-  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
+  create(base?: DeepPartial<T>): T;
+  fromPartial(object: DeepPartial<T>): T;
 }
