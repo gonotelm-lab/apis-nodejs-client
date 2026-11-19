@@ -17,11 +17,7 @@ import {
   type ServiceError,
   type UntypedServiceImplementation,
 } from "@grpc/grpc-js";
-import { GetUserRequest, GetUserResponse } from "./user";
-
-export const protobufPackage = "apps.notelm.admin.identity.v1";
-
-export const protobufFileName = "apps/notelm/admin/identity/v1/identity_service.proto";
+import { GetUserRequest, GetUserResponse } from "./user.js";
 
 export type IdentityServiceService = typeof IdentityServiceService;
 export const IdentityServiceService = {

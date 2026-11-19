@@ -1,20 +1,45 @@
 {
   "name": "@gonotelm-lab/apis-nodejs-client",
   "version": "0.0.0",
-  "private": true,
-  "description": "Generated Node.js gRPC client from gonotelm-lab/apis",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
-  "files": ["src"],
+  "description": "Generated Node.js gRPC client for gonotelm-lab APIs",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gonotelm-lab/apis-nodejs-client.git"
+  },
+  "homepage": "https://github.com/gonotelm-lab/apis-nodejs-client#readme",
+  "bugs": { "url": "https://github.com/gonotelm-lab/apis-nodejs-client/issues" },
+  "engines": { "node": ">=18" },
+  "sideEffects": false,
+  "type": "commonjs",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": { "types": "./dist/esm/index.d.ts", "default": "./dist/esm/index.js" },
+      "require": { "types": "./dist/cjs/index.d.ts", "default": "./dist/cjs/index.js" }
+    },
+    "./apps/*": {
+      "import": { "types": "./dist/esm/apps/*.d.ts", "default": "./dist/esm/apps/*.js" },
+      "require": { "types": "./dist/cjs/apps/*.d.ts", "default": "./dist/cjs/apps/*.js" }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "publishConfig": { "access": "public" },
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "npm run clean && node scripts/build-index.mjs && tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json && node scripts/postbuild.mjs",
+    "typecheck": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build"
+  },
   "dependencies": {
-    "@grpc/grpc-js": "^1.12.0",
-    "long": "^5.2.3",
-    "protobufjs": "^7.4.0"
+    "@bufbuild/protobuf": "^2.0.0",
+    "@grpc/grpc-js": "^1.12.0"
   },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "typescript": "^5.6.0"
-  },
-  "scripts": {
-    "typecheck": "tsc --noEmit"
   }
 }

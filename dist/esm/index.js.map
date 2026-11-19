@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../src/index.ts"],"names":[],"mappings":"AAAA,cAAc,qDAAqD,CAAC;AACpE,cAAc,yCAAyC,CAAC","sourcesContent":["export * from \"./apps/notelm/admin/identity/v1/identity_service.js\";\nexport * from \"./apps/notelm/admin/identity/v1/user.js\";\n"]}
