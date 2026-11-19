@@ -14,8 +14,8 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./apps/notelm/admin/identity/v1/identity_service.js"), exports);
-__exportStar(require("./apps/notelm/admin/identity/v1/user.js"), exports);
+__exportStar(require("./apps/notelm/dev/identity/v1/identity_service.js"), exports);
+__exportStar(require("./apps/notelm/dev/identity/v1/user.js"), exports);
 __exportStar(require("./promise.js"), exports);
 __exportStar(require("./clients.js"), exports);
 //# sourceMappingURL=index.js.map
