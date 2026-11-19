@@ -5,6 +5,7 @@ const {
   IdentityServiceDefinition,
   createChannel,
   createClient,
+  createIdentityServiceClient,
 } = require("../dist/cjs/index.js");
 const {
   createCallbackClient,
@@ -47,6 +48,12 @@ test("CJS require resolves both entries", async () => {
   try {
     const promised = await promiseClient.getUser({ id: "cjs-promise" });
     assert.equal(promised.user.id, "cjs-promise");
+
+    const viaFactory = await createIdentityServiceClient(
+      address,
+      ChannelCredentials.createInsecure(),
+    ).getUser({ id: "cjs-factory" });
+    assert.equal(viaFactory.user.id, "cjs-factory");
 
     const calledBack = await new Promise((resolve, reject) => {
       callbackClient.getUser({ id: "cjs-callback" }, (error, value) =>

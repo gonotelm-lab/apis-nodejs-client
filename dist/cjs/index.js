@@ -17,4 +17,5 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./apps/notelm/admin/identity/v1/identity_service.js"), exports);
 __exportStar(require("./apps/notelm/admin/identity/v1/user.js"), exports);
 __exportStar(require("./promise.js"), exports);
+__exportStar(require("./clients.js"), exports);
 //# sourceMappingURL=index.js.map

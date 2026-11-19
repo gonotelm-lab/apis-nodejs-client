@@ -8,7 +8,7 @@ import {
   status,
 } from "@grpc/grpc-js";
 import { Metadata } from "nice-grpc";
-import { createChannel, createClient, IdentityServiceDefinition } from "../dist/esm/index.js";
+import { createChannel, createClient, createIdentityServiceClient, IdentityServiceDefinition } from "../dist/esm/index.js";
 import {
   createCallbackClient,
   toGrpcJsServiceDefinition,
@@ -62,6 +62,16 @@ test("promise entry calls the service", async () => {
   } finally {
     channel.close();
   }
+});
+
+test("generated per-service factory returns a promise client", async () => {
+  const client = createIdentityServiceClient(
+    address(),
+    ChannelCredentials.createInsecure(),
+  );
+
+  const response = await client.getUser({ id: "factory" });
+  assert.equal(response.user.id, "factory");
 });
 
 test("promise entry forwards metadata, deadline and abort signal", async () => {

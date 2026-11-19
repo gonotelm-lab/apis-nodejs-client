@@ -2,7 +2,7 @@
 
 Generated Node.js gRPC client for [gonotelm-lab/apis](https://github.com/gonotelm-lab/apis).
 
-Do not edit the generated files (`src/apps/`, `src/google/`, `src/buf/`, `src/index.ts`, `dist/`) by hand — CI replaces them. `src/promise.ts`, `src/callback.ts`, `scripts/`, `test/`, and the configs are hand-written scaffold and are preserved by the sync job.
+Do not edit the generated files (`src/apps/`, `src/google/`, `src/buf/`, `src/index.ts`, `src/clients.ts`, `dist/`) by hand — CI replaces them. `src/promise.ts`, `src/callback.ts`, `scripts/`, `test/`, and the configs are hand-written scaffold and are preserved by the sync job.
 
 ## Install
 
@@ -27,6 +27,20 @@ The package exposes the same generated services through two entries, similar to 
 ### Promise (default entry)
 
 Built on [`nice-grpc`](https://github.com/deeplay-io/nice-grpc). Unary calls return `Promise`; streaming calls return `AsyncIterable`.
+
+Every generated service gets a one-line factory:
+
+```ts
+import { createIdentityServiceClient } from "@gonotelm-lab/apis-nodejs-client"
+
+const client = createIdentityServiceClient("http://127.0.0.1:7100")
+
+const { user } = await client.getUser({ id: "42" })
+```
+
+The factory creates its own channel. Use the low-level form below when you need to control the channel lifecycle.
+
+If you want to own the channel lifecycle, use the generated definition directly:
 
 ```ts
 import {
@@ -76,8 +90,9 @@ import type { User } from "@gonotelm-lab/apis-nodejs-client/apps/notelm/dev/iden
 
 - `src/apps/**` — generated protobuf messages and service definitions.
 - `src/google/**`, `src/buf/**` — generated well-known types and validation code.
-- `src/index.ts` — generated flat re-exports of `src/apps/**`, plus `src/promise.ts`.
+- `src/index.ts` — generated flat re-exports of `src/apps/**`, plus `src/promise.ts` and `src/clients.ts`.
 - `src/promise.ts` — hand-written re-exports of the `nice-grpc` client helpers.
+- `src/clients.ts` — generated per-service Promise factories (`createXxxServiceClient`).
 - `src/callback.ts` — hand-written adapter that derives a native `@grpc/grpc-js` client from a generated service definition.
 - `dist/cjs`, `dist/esm` — built JavaScript and type declarations.
 
