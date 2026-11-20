@@ -23,6 +23,7 @@ export declare enum Edition {
      */
     EDITION_2023 = 1000,
     EDITION_2024 = 1001,
+    EDITION_2026 = 1002,
     /** EDITION_UNSTABLE - A placeholder edition for developing and testing unscheduled features. */
     EDITION_UNSTABLE = 9999,
     /**
@@ -811,6 +812,11 @@ export interface FieldOptions_FeatureSupport {
      * not be able to override it.
      */
     editionRemoved?: Edition | undefined;
+    /**
+     * The removal error text if this feature is used after the edition it was
+     * removed in.
+     */
+    removalError?: string | undefined;
 }
 export interface OneofOptions {
     /**
@@ -984,6 +990,7 @@ export interface FeatureSet {
     jsonFormat?: FeatureSet_JsonFormat | undefined;
     enforceNamingStyle?: FeatureSet_EnforceNamingStyle | undefined;
     defaultSymbolVisibility?: FeatureSet_VisibilityFeature_DefaultSymbolVisibility | undefined;
+    enforceProtoLimits?: FeatureSet_ProtoLimitsFeature_EnforceProtoLimits | undefined;
 }
 export declare enum FeatureSet_FieldPresence {
     FIELD_PRESENCE_UNKNOWN = 0,
@@ -1038,6 +1045,7 @@ export declare enum FeatureSet_EnforceNamingStyle {
     ENFORCE_NAMING_STYLE_UNKNOWN = 0,
     STYLE2024 = 1,
     STYLE_LEGACY = 2,
+    STYLE2026 = 3,
     UNRECOGNIZED = -1
 }
 export declare function featureSet_EnforceNamingStyleFromJSON(object: any): FeatureSet_EnforceNamingStyle;
@@ -1062,6 +1070,26 @@ export declare enum FeatureSet_VisibilityFeature_DefaultSymbolVisibility {
 }
 export declare function featureSet_VisibilityFeature_DefaultSymbolVisibilityFromJSON(object: any): FeatureSet_VisibilityFeature_DefaultSymbolVisibility;
 export declare function featureSet_VisibilityFeature_DefaultSymbolVisibilityToJSON(object: FeatureSet_VisibilityFeature_DefaultSymbolVisibility): string;
+export interface FeatureSet_ProtoLimitsFeature {
+}
+export declare enum FeatureSet_ProtoLimitsFeature_EnforceProtoLimits {
+    PROTO_LIMITS_UNKNOWN = 0,
+    /**
+     * LEGACY_NO_EXPLICIT_LIMITS - Default pre-EDITION_2026: there are no limit enforcement at the protoc
+     * level. Practical limits still exist, but they will tend to fail while
+     * compiling protoc-generated code, and these limits tend to be language
+     * or toolchain specific.
+     */
+    LEGACY_NO_EXPLICIT_LIMITS = 1,
+    /**
+     * PROTO_LIMITS2026 - A set of limits enforced by Edition 2026 by default. For a detailed
+     * list of all the limits please consult the Edition 2026 documentation.
+     */
+    PROTO_LIMITS2026 = 2,
+    UNRECOGNIZED = -1
+}
+export declare function featureSet_ProtoLimitsFeature_EnforceProtoLimitsFromJSON(object: any): FeatureSet_ProtoLimitsFeature_EnforceProtoLimits;
+export declare function featureSet_ProtoLimitsFeature_EnforceProtoLimitsToJSON(object: FeatureSet_ProtoLimitsFeature_EnforceProtoLimits): string;
 /**
  * A compiled specification for the defaults of a set of features.  These
  * messages are generated from FeatureSet extensions and can be used to seed
@@ -1171,6 +1199,23 @@ export interface SourceCodeInfo_Location {
      *   [ 4, 3, 2, 7 ]
      * this path refers to the whole field declaration (from the beginning
      * of the label to the terminating semicolon).
+     *
+     * For options, the path refers to the interpreted option in the descriptor.
+     * E.g., for a custom option `(my_opt) = "foo"` on a message using extension
+     * number 10101, the path is:
+     *   [ 4, 3, 7, 10101 ]
+     * refers to:
+     *   file.message_type(3)     // 4, 3
+     *       .options()           // 7
+     *       .my_opt()            // 10101
+     *
+     * Sub-locations corresponding to the interpreted option's corresponding
+     * `UninterpretedOption` are also appended to the interpreted option, which
+     * deviates from the actual FileDescriptorProto path. E.g.:
+     *   [ 4, 3, 7, 10101, 2 ]
+     * refers to the option name `(my_opt)`, and:
+     *   [ 4, 3, 7, 10101, 7 ]
+     * refers to the "foo" string value of the option.
      */
     path: number[];
     /**
@@ -1310,6 +1355,7 @@ export declare const UninterpretedOption: MessageFns<UninterpretedOption>;
 export declare const UninterpretedOption_NamePart: MessageFns<UninterpretedOption_NamePart>;
 export declare const FeatureSet: MessageFns<FeatureSet>;
 export declare const FeatureSet_VisibilityFeature: MessageFns<FeatureSet_VisibilityFeature>;
+export declare const FeatureSet_ProtoLimitsFeature: MessageFns<FeatureSet_ProtoLimitsFeature>;
 export declare const FeatureSetDefaults: MessageFns<FeatureSetDefaults>;
 export declare const FeatureSetDefaults_FeatureSetEditionDefault: MessageFns<FeatureSetDefaults_FeatureSetEditionDefault>;
 export declare const SourceCodeInfo: MessageFns<SourceCodeInfo>;
