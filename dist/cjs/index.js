@@ -16,6 +16,4 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./apps/notelm/dev/identity/v1/identity_service.js"), exports);
 __exportStar(require("./apps/notelm/dev/identity/v1/user.js"), exports);
-__exportStar(require("./promise.js"), exports);
-__exportStar(require("./clients.js"), exports);
 //# sourceMappingURL=index.js.map

@@ -243,10 +243,10 @@ export const User: MessageFns<User> = {
     return obj;
   },
 
-  create(base?: DeepPartial<User>): User {
-    return User.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<User>, I>>(base?: I): User {
+    return User.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<User>): User {
+  fromPartial<I extends Exact<DeepPartial<User>, I>>(object: I): User {
     const message = createBaseUser();
     message.id = object.id ?? "";
     message.nickname = object.nickname ?? "";
@@ -316,10 +316,10 @@ export const GetUserRequest: MessageFns<GetUserRequest> = {
     return obj;
   },
 
-  create(base?: DeepPartial<GetUserRequest>): GetUserRequest {
-    return GetUserRequest.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<GetUserRequest>, I>>(base?: I): GetUserRequest {
+    return GetUserRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<GetUserRequest>): GetUserRequest {
+  fromPartial<I extends Exact<DeepPartial<GetUserRequest>, I>>(object: I): GetUserRequest {
     const message = createBaseGetUserRequest();
     message.id = object.id ?? "";
     return message;
@@ -383,10 +383,10 @@ export const GetUserResponse: MessageFns<GetUserResponse> = {
     return obj;
   },
 
-  create(base?: DeepPartial<GetUserResponse>): GetUserResponse {
-    return GetUserResponse.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<GetUserResponse>, I>>(base?: I): GetUserResponse {
+    return GetUserResponse.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<GetUserResponse>): GetUserResponse {
+  fromPartial<I extends Exact<DeepPartial<GetUserResponse>, I>>(object: I): GetUserResponse {
     const message = createBaseGetUserResponse();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     return message;
@@ -467,10 +467,10 @@ export const SetUserStatusRequest: MessageFns<SetUserStatusRequest> = {
     return obj;
   },
 
-  create(base?: DeepPartial<SetUserStatusRequest>): SetUserStatusRequest {
-    return SetUserStatusRequest.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<SetUserStatusRequest>, I>>(base?: I): SetUserStatusRequest {
+    return SetUserStatusRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<SetUserStatusRequest>): SetUserStatusRequest {
+  fromPartial<I extends Exact<DeepPartial<SetUserStatusRequest>, I>>(object: I): SetUserStatusRequest {
     const message = createBaseSetUserStatusRequest();
     message.id = object.id ?? "";
     message.status = object.status ?? 0;
@@ -535,10 +535,10 @@ export const SetUserStatusResponse: MessageFns<SetUserStatusResponse> = {
     return obj;
   },
 
-  create(base?: DeepPartial<SetUserStatusResponse>): SetUserStatusResponse {
-    return SetUserStatusResponse.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<SetUserStatusResponse>, I>>(base?: I): SetUserStatusResponse {
+    return SetUserStatusResponse.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<SetUserStatusResponse>): SetUserStatusResponse {
+  fromPartial<I extends Exact<DeepPartial<SetUserStatusResponse>, I>>(object: I): SetUserStatusResponse {
     const message = createBaseSetUserStatusResponse();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     return message;
@@ -552,6 +552,13 @@ type DeepPartial<T> = T extends Builtin ? T
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+type Exact<P, I> = P extends Builtin ? P
+  :
+    & P
+    & { [K in keyof P as Extract<K, keyof I>]: Exact<P[K], I[K & keyof I]> }
+    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = Math.trunc(date.getTime() / 1_000);
@@ -584,6 +591,6 @@ interface MessageFns<T> {
   decode(input: BinaryReader | Uint8Array, length?: number): T;
   fromJSON(object: any): T;
   toJSON(message: T): unknown;
-  create(base?: DeepPartial<T>): T;
-  fromPartial(object: DeepPartial<T>): T;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

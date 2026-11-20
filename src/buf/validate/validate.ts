@@ -4026,10 +4026,10 @@ export const Rule: MessageFns<Rule> = {
     return obj;
   },
 
-  create(base?: DeepPartial<Rule>): Rule {
-    return Rule.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<Rule>, I>>(base?: I): Rule {
+    return Rule.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<Rule>): Rule {
+  fromPartial<I extends Exact<DeepPartial<Rule>, I>>(object: I): Rule {
     const message = createBaseRule();
     message.id = object.id ?? "";
     message.message = object.message ?? "";
@@ -4131,10 +4131,10 @@ export const MessageRules: MessageFns<MessageRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<MessageRules>): MessageRules {
-    return MessageRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<MessageRules>, I>>(base?: I): MessageRules {
+    return MessageRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<MessageRules>): MessageRules {
+  fromPartial<I extends Exact<DeepPartial<MessageRules>, I>>(object: I): MessageRules {
     const message = createBaseMessageRules();
     message.celExpression = object.celExpression?.map((e) => e) || [];
     message.cel = object.cel?.map((e) => Rule.fromPartial(e)) || [];
@@ -4217,10 +4217,10 @@ export const MessageOneofRule: MessageFns<MessageOneofRule> = {
     return obj;
   },
 
-  create(base?: DeepPartial<MessageOneofRule>): MessageOneofRule {
-    return MessageOneofRule.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<MessageOneofRule>, I>>(base?: I): MessageOneofRule {
+    return MessageOneofRule.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<MessageOneofRule>): MessageOneofRule {
+  fromPartial<I extends Exact<DeepPartial<MessageOneofRule>, I>>(object: I): MessageOneofRule {
     const message = createBaseMessageOneofRule();
     message.fields = object.fields?.map((e) => e) || [];
     message.required = object.required ?? false;
@@ -4285,10 +4285,10 @@ export const OneofRules: MessageFns<OneofRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<OneofRules>): OneofRules {
-    return OneofRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<OneofRules>, I>>(base?: I): OneofRules {
+    return OneofRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<OneofRules>): OneofRules {
+  fromPartial<I extends Exact<DeepPartial<OneofRules>, I>>(object: I): OneofRules {
     const message = createBaseOneofRules();
     message.required = object.required ?? false;
     return message;
@@ -4764,10 +4764,10 @@ export const FieldRules: MessageFns<FieldRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<FieldRules>): FieldRules {
-    return FieldRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<FieldRules>, I>>(base?: I): FieldRules {
+    return FieldRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<FieldRules>): FieldRules {
+  fromPartial<I extends Exact<DeepPartial<FieldRules>, I>>(object: I): FieldRules {
     const message = createBaseFieldRules();
     message.celExpression = object.celExpression?.map((e) => e) || [];
     message.cel = object.cel?.map((e) => Rule.fromPartial(e)) || [];
@@ -4892,10 +4892,10 @@ export const PredefinedRules: MessageFns<PredefinedRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<PredefinedRules>): PredefinedRules {
-    return PredefinedRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<PredefinedRules>, I>>(base?: I): PredefinedRules {
+    return PredefinedRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<PredefinedRules>): PredefinedRules {
+  fromPartial<I extends Exact<DeepPartial<PredefinedRules>, I>>(object: I): PredefinedRules {
     const message = createBasePredefinedRules();
     message.cel = object.cel?.map((e) => Rule.fromPartial(e)) || [];
     return message;
@@ -5125,10 +5125,10 @@ export const FloatRules: MessageFns<FloatRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<FloatRules>): FloatRules {
-    return FloatRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<FloatRules>, I>>(base?: I): FloatRules {
+    return FloatRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<FloatRules>): FloatRules {
+  fromPartial<I extends Exact<DeepPartial<FloatRules>, I>>(object: I): FloatRules {
     const message = createBaseFloatRules();
     message.const = object.const ?? 0;
     message.lt = object.lt ?? undefined;
@@ -5366,10 +5366,10 @@ export const DoubleRules: MessageFns<DoubleRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<DoubleRules>): DoubleRules {
-    return DoubleRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<DoubleRules>, I>>(base?: I): DoubleRules {
+    return DoubleRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<DoubleRules>): DoubleRules {
+  fromPartial<I extends Exact<DeepPartial<DoubleRules>, I>>(object: I): DoubleRules {
     const message = createBaseDoubleRules();
     message.const = object.const ?? 0;
     message.lt = object.lt ?? undefined;
@@ -5582,10 +5582,10 @@ export const Int32Rules: MessageFns<Int32Rules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<Int32Rules>): Int32Rules {
-    return Int32Rules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<Int32Rules>, I>>(base?: I): Int32Rules {
+    return Int32Rules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<Int32Rules>): Int32Rules {
+  fromPartial<I extends Exact<DeepPartial<Int32Rules>, I>>(object: I): Int32Rules {
     const message = createBaseInt32Rules();
     message.const = object.const ?? 0;
     message.lt = object.lt ?? undefined;
@@ -5797,10 +5797,10 @@ export const Int64Rules: MessageFns<Int64Rules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<Int64Rules>): Int64Rules {
-    return Int64Rules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<Int64Rules>, I>>(base?: I): Int64Rules {
+    return Int64Rules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<Int64Rules>): Int64Rules {
+  fromPartial<I extends Exact<DeepPartial<Int64Rules>, I>>(object: I): Int64Rules {
     const message = createBaseInt64Rules();
     message.const = object.const ?? 0;
     message.lt = object.lt ?? undefined;
@@ -6012,10 +6012,10 @@ export const UInt32Rules: MessageFns<UInt32Rules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<UInt32Rules>): UInt32Rules {
-    return UInt32Rules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<UInt32Rules>, I>>(base?: I): UInt32Rules {
+    return UInt32Rules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<UInt32Rules>): UInt32Rules {
+  fromPartial<I extends Exact<DeepPartial<UInt32Rules>, I>>(object: I): UInt32Rules {
     const message = createBaseUInt32Rules();
     message.const = object.const ?? 0;
     message.lt = object.lt ?? undefined;
@@ -6227,10 +6227,10 @@ export const UInt64Rules: MessageFns<UInt64Rules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<UInt64Rules>): UInt64Rules {
-    return UInt64Rules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<UInt64Rules>, I>>(base?: I): UInt64Rules {
+    return UInt64Rules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<UInt64Rules>): UInt64Rules {
+  fromPartial<I extends Exact<DeepPartial<UInt64Rules>, I>>(object: I): UInt64Rules {
     const message = createBaseUInt64Rules();
     message.const = object.const ?? 0;
     message.lt = object.lt ?? undefined;
@@ -6442,10 +6442,10 @@ export const SInt32Rules: MessageFns<SInt32Rules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<SInt32Rules>): SInt32Rules {
-    return SInt32Rules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<SInt32Rules>, I>>(base?: I): SInt32Rules {
+    return SInt32Rules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<SInt32Rules>): SInt32Rules {
+  fromPartial<I extends Exact<DeepPartial<SInt32Rules>, I>>(object: I): SInt32Rules {
     const message = createBaseSInt32Rules();
     message.const = object.const ?? 0;
     message.lt = object.lt ?? undefined;
@@ -6657,10 +6657,10 @@ export const SInt64Rules: MessageFns<SInt64Rules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<SInt64Rules>): SInt64Rules {
-    return SInt64Rules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<SInt64Rules>, I>>(base?: I): SInt64Rules {
+    return SInt64Rules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<SInt64Rules>): SInt64Rules {
+  fromPartial<I extends Exact<DeepPartial<SInt64Rules>, I>>(object: I): SInt64Rules {
     const message = createBaseSInt64Rules();
     message.const = object.const ?? 0;
     message.lt = object.lt ?? undefined;
@@ -6872,10 +6872,10 @@ export const Fixed32Rules: MessageFns<Fixed32Rules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<Fixed32Rules>): Fixed32Rules {
-    return Fixed32Rules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<Fixed32Rules>, I>>(base?: I): Fixed32Rules {
+    return Fixed32Rules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<Fixed32Rules>): Fixed32Rules {
+  fromPartial<I extends Exact<DeepPartial<Fixed32Rules>, I>>(object: I): Fixed32Rules {
     const message = createBaseFixed32Rules();
     message.const = object.const ?? 0;
     message.lt = object.lt ?? undefined;
@@ -7087,10 +7087,10 @@ export const Fixed64Rules: MessageFns<Fixed64Rules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<Fixed64Rules>): Fixed64Rules {
-    return Fixed64Rules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<Fixed64Rules>, I>>(base?: I): Fixed64Rules {
+    return Fixed64Rules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<Fixed64Rules>): Fixed64Rules {
+  fromPartial<I extends Exact<DeepPartial<Fixed64Rules>, I>>(object: I): Fixed64Rules {
     const message = createBaseFixed64Rules();
     message.const = object.const ?? 0;
     message.lt = object.lt ?? undefined;
@@ -7302,10 +7302,10 @@ export const SFixed32Rules: MessageFns<SFixed32Rules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<SFixed32Rules>): SFixed32Rules {
-    return SFixed32Rules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<SFixed32Rules>, I>>(base?: I): SFixed32Rules {
+    return SFixed32Rules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<SFixed32Rules>): SFixed32Rules {
+  fromPartial<I extends Exact<DeepPartial<SFixed32Rules>, I>>(object: I): SFixed32Rules {
     const message = createBaseSFixed32Rules();
     message.const = object.const ?? 0;
     message.lt = object.lt ?? undefined;
@@ -7517,10 +7517,10 @@ export const SFixed64Rules: MessageFns<SFixed64Rules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<SFixed64Rules>): SFixed64Rules {
-    return SFixed64Rules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<SFixed64Rules>, I>>(base?: I): SFixed64Rules {
+    return SFixed64Rules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<SFixed64Rules>): SFixed64Rules {
+  fromPartial<I extends Exact<DeepPartial<SFixed64Rules>, I>>(object: I): SFixed64Rules {
     const message = createBaseSFixed64Rules();
     message.const = object.const ?? 0;
     message.lt = object.lt ?? undefined;
@@ -7618,10 +7618,10 @@ export const BoolRules: MessageFns<BoolRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<BoolRules>): BoolRules {
-    return BoolRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<BoolRules>, I>>(base?: I): BoolRules {
+    return BoolRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<BoolRules>): BoolRules {
+  fromPartial<I extends Exact<DeepPartial<BoolRules>, I>>(object: I): BoolRules {
     const message = createBaseBoolRules();
     message.const = object.const ?? false;
     message.example = object.example?.map((e) => e) || [];
@@ -8342,10 +8342,10 @@ export const StringRules: MessageFns<StringRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<StringRules>): StringRules {
-    return StringRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<StringRules>, I>>(base?: I): StringRules {
+    return StringRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<StringRules>): StringRules {
+  fromPartial<I extends Exact<DeepPartial<StringRules>, I>>(object: I): StringRules {
     const message = createBaseStringRules();
     message.const = object.const ?? "";
     message.len = object.len ?? 0;
@@ -8687,10 +8687,10 @@ export const BytesRules: MessageFns<BytesRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<BytesRules>): BytesRules {
-    return BytesRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<BytesRules>, I>>(base?: I): BytesRules {
+    return BytesRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<BytesRules>): BytesRules {
+  fromPartial<I extends Exact<DeepPartial<BytesRules>, I>>(object: I): BytesRules {
     const message = createBaseBytesRules();
     message.const = object.const ?? Buffer.alloc(0);
     message.len = object.len ?? 0;
@@ -8868,10 +8868,10 @@ export const EnumRules: MessageFns<EnumRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<EnumRules>): EnumRules {
-    return EnumRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<EnumRules>, I>>(base?: I): EnumRules {
+    return EnumRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<EnumRules>): EnumRules {
+  fromPartial<I extends Exact<DeepPartial<EnumRules>, I>>(object: I): EnumRules {
     const message = createBaseEnumRules();
     message.const = object.const ?? 0;
     message.definedOnly = object.definedOnly ?? false;
@@ -8994,10 +8994,10 @@ export const RepeatedRules: MessageFns<RepeatedRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<RepeatedRules>): RepeatedRules {
-    return RepeatedRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<RepeatedRules>, I>>(base?: I): RepeatedRules {
+    return RepeatedRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<RepeatedRules>): RepeatedRules {
+  fromPartial<I extends Exact<DeepPartial<RepeatedRules>, I>>(object: I): RepeatedRules {
     const message = createBaseRepeatedRules();
     message.minItems = object.minItems ?? 0;
     message.maxItems = object.maxItems ?? 0;
@@ -9121,10 +9121,10 @@ export const MapRules: MessageFns<MapRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<MapRules>): MapRules {
-    return MapRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<MapRules>, I>>(base?: I): MapRules {
+    return MapRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<MapRules>): MapRules {
+  fromPartial<I extends Exact<DeepPartial<MapRules>, I>>(object: I): MapRules {
     const message = createBaseMapRules();
     message.minPairs = object.minPairs ?? 0;
     message.maxPairs = object.maxPairs ?? 0;
@@ -9216,10 +9216,10 @@ export const AnyRules: MessageFns<AnyRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<AnyRules>): AnyRules {
-    return AnyRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<AnyRules>, I>>(base?: I): AnyRules {
+    return AnyRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<AnyRules>): AnyRules {
+  fromPartial<I extends Exact<DeepPartial<AnyRules>, I>>(object: I): AnyRules {
     const message = createBaseAnyRules();
     message.in = object.in?.map((e) => e) || [];
     message.notIn = object.notIn?.map((e) => e) || [];
@@ -9404,10 +9404,10 @@ export const DurationRules: MessageFns<DurationRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<DurationRules>): DurationRules {
-    return DurationRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<DurationRules>, I>>(base?: I): DurationRules {
+    return DurationRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<DurationRules>): DurationRules {
+  fromPartial<I extends Exact<DeepPartial<DurationRules>, I>>(object: I): DurationRules {
     const message = createBaseDurationRules();
     message.const = (object.const !== undefined && object.const !== null)
       ? Duration.fromPartial(object.const)
@@ -9533,10 +9533,10 @@ export const FieldMaskRules: MessageFns<FieldMaskRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<FieldMaskRules>): FieldMaskRules {
-    return FieldMaskRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<FieldMaskRules>, I>>(base?: I): FieldMaskRules {
+    return FieldMaskRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<FieldMaskRules>): FieldMaskRules {
+  fromPartial<I extends Exact<DeepPartial<FieldMaskRules>, I>>(object: I): FieldMaskRules {
     const message = createBaseFieldMaskRules();
     message.const = object.const ?? undefined;
     message.in = object.in?.map((e) => e) || [];
@@ -9745,10 +9745,10 @@ export const TimestampRules: MessageFns<TimestampRules> = {
     return obj;
   },
 
-  create(base?: DeepPartial<TimestampRules>): TimestampRules {
-    return TimestampRules.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<TimestampRules>, I>>(base?: I): TimestampRules {
+    return TimestampRules.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<TimestampRules>): TimestampRules {
+  fromPartial<I extends Exact<DeepPartial<TimestampRules>, I>>(object: I): TimestampRules {
     const message = createBaseTimestampRules();
     message.const = object.const ?? undefined;
     message.lt = object.lt ?? undefined;
@@ -9826,10 +9826,10 @@ export const Violations: MessageFns<Violations> = {
     return obj;
   },
 
-  create(base?: DeepPartial<Violations>): Violations {
-    return Violations.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<Violations>, I>>(base?: I): Violations {
+    return Violations.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<Violations>): Violations {
+  fromPartial<I extends Exact<DeepPartial<Violations>, I>>(object: I): Violations {
     const message = createBaseViolations();
     message.violations = object.violations?.map((e) => Violation.fromPartial(e)) || [];
     return message;
@@ -9963,10 +9963,10 @@ export const Violation: MessageFns<Violation> = {
     return obj;
   },
 
-  create(base?: DeepPartial<Violation>): Violation {
-    return Violation.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<Violation>, I>>(base?: I): Violation {
+    return Violation.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<Violation>): Violation {
+  fromPartial<I extends Exact<DeepPartial<Violation>, I>>(object: I): Violation {
     const message = createBaseViolation();
     message.field = (object.field !== undefined && object.field !== null)
       ? FieldPath.fromPartial(object.field)
@@ -10040,10 +10040,10 @@ export const FieldPath: MessageFns<FieldPath> = {
     return obj;
   },
 
-  create(base?: DeepPartial<FieldPath>): FieldPath {
-    return FieldPath.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<FieldPath>, I>>(base?: I): FieldPath {
+    return FieldPath.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<FieldPath>): FieldPath {
+  fromPartial<I extends Exact<DeepPartial<FieldPath>, I>>(object: I): FieldPath {
     const message = createBaseFieldPath();
     message.elements = object.elements?.map((e) => FieldPathElement.fromPartial(e)) || [];
     return message;
@@ -10291,10 +10291,10 @@ export const FieldPathElement: MessageFns<FieldPathElement> = {
     return obj;
   },
 
-  create(base?: DeepPartial<FieldPathElement>): FieldPathElement {
-    return FieldPathElement.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<FieldPathElement>, I>>(base?: I): FieldPathElement {
+    return FieldPathElement.fromPartial(base ?? ({} as any));
   },
-  fromPartial(object: DeepPartial<FieldPathElement>): FieldPathElement {
+  fromPartial<I extends Exact<DeepPartial<FieldPathElement>, I>>(object: I): FieldPathElement {
     const message = createBaseFieldPathElement();
     message.fieldNumber = object.fieldNumber ?? 0;
     message.fieldName = object.fieldName ?? "";
@@ -10329,6 +10329,13 @@ type DeepPartial<T> = T extends Builtin ? T
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+type Exact<P, I> = P extends Builtin ? P
+  :
+    & P
+    & { [K in keyof P as Extract<K, keyof I>]: Exact<P[K], I[K & keyof I]> }
+    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = Math.trunc(date.getTime() / 1_000);
@@ -10372,6 +10379,6 @@ interface MessageFns<T> {
   decode(input: BinaryReader | Uint8Array, length?: number): T;
   fromJSON(object: any): T;
   toJSON(message: T): unknown;
-  create(base?: DeepPartial<T>): T;
-  fromPartial(object: DeepPartial<T>): T;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

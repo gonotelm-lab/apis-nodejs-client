@@ -2,7 +2,7 @@
 
 Generated Node.js gRPC client for [gonotelm-lab/apis](https://github.com/gonotelm-lab/apis).
 
-Do not edit the generated files (`src/apps/`, `src/google/`, `src/buf/`, `src/index.ts`, `src/clients.ts`, `dist/`) by hand — CI replaces them. `src/promise.ts`, `src/callback.ts`, `scripts/`, `test/`, and the configs are hand-written scaffold and are preserved by the sync job.
+Do not edit the generated files (`src/apps/`, `src/google/`, `src/buf/`, `src/index.ts`, `dist/`) by hand — CI replaces them. `scripts/`, `test/`, and the configs are hand-written scaffold and are preserved by the sync job.
 
 ## Install
 
@@ -22,48 +22,15 @@ npm install @gonotelm-lab/apis-nodejs-client
 
 ## Usage
 
-The package exposes the same generated services through two entries, similar to `node:fs` and `node:fs/promises`.
+Each generated service module is a native [`@grpc/grpc-js`](https://github.com/grpc/grpc-node) client (callback API). A Promise flavor sits next to it under `<service>/promise`, the same split as `node:fs` and `node:fs/promises`.
 
-### Promise (default entry)
-
-Built on [`nice-grpc`](https://github.com/deeplay-io/nice-grpc). Unary calls return `Promise`; streaming calls return `AsyncIterable`.
-
-Every generated service gets a one-line factory:
+### Callback (default, native grpc-js)
 
 ```ts
-import { createIdentityServiceClient } from "@gonotelm-lab/apis-nodejs-client"
+import { ChannelCredentials } from "@grpc/grpc-js"
+import { IdentityServiceClient } from "@gonotelm-lab/apis-nodejs-client/apps/notelm/dev/identity/v1/identity_service"
 
-const client = createIdentityServiceClient("http://127.0.0.1:7100")
-
-const { user } = await client.getUser({ id: "42" })
-```
-
-The factory creates its own channel. Use the low-level form below when you need to control the channel lifecycle.
-
-If you want to own the channel lifecycle, use the generated definition directly:
-
-```ts
-import {
-  IdentityServiceDefinition,
-  createChannel,
-  createClient,
-} from "@gonotelm-lab/apis-nodejs-client"
-
-const channel = createChannel("http://127.0.0.1:7100")
-const client = createClient(IdentityServiceDefinition, channel)
-
-const { user } = await client.getUser({ id: "42" })
-```
-
-The client is typed from the generated `*ServiceDefinition`. Generated `*ServiceClient` interfaces are also exported if you prefer to name the type.
-
-### Callback (native `@grpc/grpc-js`)
-
-```ts
-import { createCallbackClient } from "@gonotelm-lab/apis-nodejs-client/callback"
-
-const client = createCallbackClient(
-  IdentityServiceDefinition,
+const client = new IdentityServiceClient(
   "127.0.0.1:7100",
   ChannelCredentials.createInsecure(),
 )
@@ -78,6 +45,31 @@ const call = client.getUser({ id: "42" }, (error, response) => {
 call.cancel()
 ```
 
+### Promise
+
+Built on [`nice-grpc`](https://github.com/deeplay-io/nice-grpc). Unary calls return `Promise`; streaming calls return `AsyncIterable`.
+
+```ts
+import { createIdentityServiceClient } from "@gonotelm-lab/apis-nodejs-client/apps/notelm/dev/identity/v1/identity_service/promise"
+
+const client = createIdentityServiceClient("http://127.0.0.1:7100")
+
+const { user } = await client.getUser({ id: "42" })
+```
+
+The factory creates its own channel. To control the channel lifecycle, pass the generated service definition to `nice-grpc` yourself:
+
+```ts
+import { createChannel, createClient } from "nice-grpc"
+import { IdentityServiceService } from "@gonotelm-lab/apis-nodejs-client/apps/notelm/dev/identity/v1/identity_service"
+
+const channel = createChannel("http://127.0.0.1:7100")
+const client = createClient(IdentityServiceService, channel)
+
+const { user } = await client.getUser({ id: "42" })
+channel.close()
+```
+
 ### Deep imports
 
 Deep imports map one-to-one with proto files:
@@ -88,12 +80,11 @@ import type { User } from "@gonotelm-lab/apis-nodejs-client/apps/notelm/dev/iden
 
 ## Layout
 
-- `src/apps/**` — generated protobuf messages and service definitions.
+- `src/apps/**` — generated protobuf messages and native grpc-js services (the default entry).
+- `src/apps/**/<service>/promise.ts` — generated Promise flavor, exported as `<service>/promise`.
 - `src/google/**`, `src/buf/**` — generated well-known types and validation code.
-- `src/index.ts` — generated flat re-exports of `src/apps/**`, plus `src/promise.ts` and `src/clients.ts`.
-- `src/promise.ts` — hand-written re-exports of the `nice-grpc` client helpers.
-- `src/clients.ts` — generated per-service Promise factories (`createXxxServiceClient`).
-- `src/callback.ts` — hand-written adapter that derives a native `@grpc/grpc-js` client from a generated service definition.
+- `src/index.ts` — generated flat re-exports of `src/apps/**`.
+- `scripts/build-index.mjs` — generates `src/index.ts` and the per-service `promise.ts` modules during the build.
 - `dist/cjs`, `dist/esm` — built JavaScript and type declarations.
 
 ## Tests
@@ -103,7 +94,7 @@ npm run build
 npm test
 ```
 
-The test suite starts a real gRPC server and exercises the promise entry, the callback entry, metadata, deadlines, status propagation, and `cancel()`.
+The test suite starts a real gRPC server and exercises the default grpc-js entry, the promise entry, metadata, deadlines, status propagation, and `cancel()`.
 
 ## Publishing
 

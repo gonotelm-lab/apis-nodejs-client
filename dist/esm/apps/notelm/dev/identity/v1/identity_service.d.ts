@@ -1,38 +1,40 @@
-import type { CallContext, CallOptions } from "nice-grpc-common";
+import { type CallOptions, type ChannelCredentials, Client, type ClientOptions, type ClientUnaryCall, type handleUnaryCall, type Metadata, type ServiceError, type UntypedServiceImplementation } from "@grpc/grpc-js";
 import { GetUserRequest, GetUserResponse, SetUserStatusRequest, SetUserStatusResponse } from "./user.js";
-export type IdentityServiceDefinition = typeof IdentityServiceDefinition;
-export declare const IdentityServiceDefinition: {
-    readonly name: "IdentityService";
-    readonly fullName: "apps.notelm.dev.identity.v1.IdentityService";
-    readonly methods: {
-        readonly getUser: {
-            readonly name: "GetUser";
-            readonly requestType: typeof GetUserRequest;
-            readonly requestStream: false;
-            readonly responseType: typeof GetUserResponse;
-            readonly responseStream: false;
-            readonly options: {};
-        };
-        readonly setUserStatus: {
-            readonly name: "SetUserStatus";
-            readonly requestType: typeof SetUserStatusRequest;
-            readonly requestStream: false;
-            readonly responseType: typeof SetUserStatusResponse;
-            readonly responseStream: false;
-            readonly options: {};
-        };
+export type IdentityServiceService = typeof IdentityServiceService;
+export declare const IdentityServiceService: {
+    readonly getUser: {
+        readonly path: "/apps.notelm.dev.identity.v1.IdentityService/GetUser";
+        readonly requestStream: false;
+        readonly responseStream: false;
+        readonly requestSerialize: (value: GetUserRequest) => Buffer;
+        readonly requestDeserialize: (value: Buffer) => GetUserRequest;
+        readonly responseSerialize: (value: GetUserResponse) => Buffer;
+        readonly responseDeserialize: (value: Buffer) => GetUserResponse;
+    };
+    readonly setUserStatus: {
+        readonly path: "/apps.notelm.dev.identity.v1.IdentityService/SetUserStatus";
+        readonly requestStream: false;
+        readonly responseStream: false;
+        readonly requestSerialize: (value: SetUserStatusRequest) => Buffer;
+        readonly requestDeserialize: (value: Buffer) => SetUserStatusRequest;
+        readonly responseSerialize: (value: SetUserStatusResponse) => Buffer;
+        readonly responseDeserialize: (value: Buffer) => SetUserStatusResponse;
     };
 };
-export interface IdentityServiceImplementation<CallContextExt = {}> {
-    getUser(request: GetUserRequest, context: CallContext & CallContextExt): Promise<DeepPartial<GetUserResponse>>;
-    setUserStatus(request: SetUserStatusRequest, context: CallContext & CallContextExt): Promise<DeepPartial<SetUserStatusResponse>>;
+export interface IdentityServiceServer extends UntypedServiceImplementation {
+    getUser: handleUnaryCall<GetUserRequest, GetUserResponse>;
+    setUserStatus: handleUnaryCall<SetUserStatusRequest, SetUserStatusResponse>;
 }
-export interface IdentityServiceClient<CallOptionsExt = {}> {
-    getUser(request: DeepPartial<GetUserRequest>, options?: CallOptions & CallOptionsExt): Promise<GetUserResponse>;
-    setUserStatus(request: DeepPartial<SetUserStatusRequest>, options?: CallOptions & CallOptionsExt): Promise<SetUserStatusResponse>;
+export interface IdentityServiceClient extends Client {
+    getUser(request: GetUserRequest, callback: (error: ServiceError | null, response: GetUserResponse) => void): ClientUnaryCall;
+    getUser(request: GetUserRequest, metadata: Metadata, callback: (error: ServiceError | null, response: GetUserResponse) => void): ClientUnaryCall;
+    getUser(request: GetUserRequest, metadata: Metadata, options: Partial<CallOptions>, callback: (error: ServiceError | null, response: GetUserResponse) => void): ClientUnaryCall;
+    setUserStatus(request: SetUserStatusRequest, callback: (error: ServiceError | null, response: SetUserStatusResponse) => void): ClientUnaryCall;
+    setUserStatus(request: SetUserStatusRequest, metadata: Metadata, callback: (error: ServiceError | null, response: SetUserStatusResponse) => void): ClientUnaryCall;
+    setUserStatus(request: SetUserStatusRequest, metadata: Metadata, options: Partial<CallOptions>, callback: (error: ServiceError | null, response: SetUserStatusResponse) => void): ClientUnaryCall;
 }
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
-type DeepPartial<T> = T extends Builtin ? T : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {
-    [K in keyof T]?: DeepPartial<T[K]>;
-} : Partial<T>;
-export {};
+export declare const IdentityServiceClient: {
+    new (address: string, credentials: ChannelCredentials, options?: Partial<ClientOptions>): IdentityServiceClient;
+    service: typeof IdentityServiceService;
+    serviceName: string;
+};

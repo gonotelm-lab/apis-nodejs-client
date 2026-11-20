@@ -5,28 +5,29 @@
 //   protoc               unknown
 // source: apps/notelm/dev/identity/v1/identity_service.proto
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.IdentityServiceDefinition = void 0;
+exports.IdentityServiceClient = exports.IdentityServiceService = void 0;
+/* eslint-disable */
+const grpc_js_1 = require("@grpc/grpc-js");
 const user_js_1 = require("./user.js");
-exports.IdentityServiceDefinition = {
-    name: "IdentityService",
-    fullName: "apps.notelm.dev.identity.v1.IdentityService",
-    methods: {
-        getUser: {
-            name: "GetUser",
-            requestType: user_js_1.GetUserRequest,
-            requestStream: false,
-            responseType: user_js_1.GetUserResponse,
-            responseStream: false,
-            options: {},
-        },
-        setUserStatus: {
-            name: "SetUserStatus",
-            requestType: user_js_1.SetUserStatusRequest,
-            requestStream: false,
-            responseType: user_js_1.SetUserStatusResponse,
-            responseStream: false,
-            options: {},
-        },
+exports.IdentityServiceService = {
+    getUser: {
+        path: "/apps.notelm.dev.identity.v1.IdentityService/GetUser",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value) => Buffer.from(user_js_1.GetUserRequest.encode(value).finish()),
+        requestDeserialize: (value) => user_js_1.GetUserRequest.decode(value),
+        responseSerialize: (value) => Buffer.from(user_js_1.GetUserResponse.encode(value).finish()),
+        responseDeserialize: (value) => user_js_1.GetUserResponse.decode(value),
+    },
+    setUserStatus: {
+        path: "/apps.notelm.dev.identity.v1.IdentityService/SetUserStatus",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value) => Buffer.from(user_js_1.SetUserStatusRequest.encode(value).finish()),
+        requestDeserialize: (value) => user_js_1.SetUserStatusRequest.decode(value),
+        responseSerialize: (value) => Buffer.from(user_js_1.SetUserStatusResponse.encode(value).finish()),
+        responseDeserialize: (value) => user_js_1.SetUserStatusResponse.decode(value),
     },
 };
+exports.IdentityServiceClient = (0, grpc_js_1.makeGenericClientConstructor)(exports.IdentityServiceService, "apps.notelm.dev.identity.v1.IdentityService");
 //# sourceMappingURL=identity_service.js.map

@@ -30,7 +30,6 @@ export var Edition;
      */
     Edition[Edition["EDITION_2023"] = 1000] = "EDITION_2023";
     Edition[Edition["EDITION_2024"] = 1001] = "EDITION_2024";
-    Edition[Edition["EDITION_2026"] = 1002] = "EDITION_2026";
     /** EDITION_UNSTABLE - A placeholder edition for developing and testing unscheduled features. */
     Edition[Edition["EDITION_UNSTABLE"] = 9999] = "EDITION_UNSTABLE";
     /**
@@ -70,9 +69,6 @@ export function editionFromJSON(object) {
         case 1001:
         case "EDITION_2024":
             return Edition.EDITION_2024;
-        case 1002:
-        case "EDITION_2026":
-            return Edition.EDITION_2026;
         case 9999:
         case "EDITION_UNSTABLE":
             return Edition.EDITION_UNSTABLE;
@@ -114,8 +110,6 @@ export function editionToJSON(object) {
             return "EDITION_2023";
         case Edition.EDITION_2024:
             return "EDITION_2024";
-        case Edition.EDITION_2026:
-            return "EDITION_2026";
         case Edition.EDITION_UNSTABLE:
             return "EDITION_UNSTABLE";
         case Edition.EDITION_1_TEST_ONLY:
@@ -931,7 +925,6 @@ export var FeatureSet_EnforceNamingStyle;
     FeatureSet_EnforceNamingStyle[FeatureSet_EnforceNamingStyle["ENFORCE_NAMING_STYLE_UNKNOWN"] = 0] = "ENFORCE_NAMING_STYLE_UNKNOWN";
     FeatureSet_EnforceNamingStyle[FeatureSet_EnforceNamingStyle["STYLE2024"] = 1] = "STYLE2024";
     FeatureSet_EnforceNamingStyle[FeatureSet_EnforceNamingStyle["STYLE_LEGACY"] = 2] = "STYLE_LEGACY";
-    FeatureSet_EnforceNamingStyle[FeatureSet_EnforceNamingStyle["STYLE2026"] = 3] = "STYLE2026";
     FeatureSet_EnforceNamingStyle[FeatureSet_EnforceNamingStyle["UNRECOGNIZED"] = -1] = "UNRECOGNIZED";
 })(FeatureSet_EnforceNamingStyle || (FeatureSet_EnforceNamingStyle = {}));
 export function featureSet_EnforceNamingStyleFromJSON(object) {
@@ -945,9 +938,6 @@ export function featureSet_EnforceNamingStyleFromJSON(object) {
         case 2:
         case "STYLE_LEGACY":
             return FeatureSet_EnforceNamingStyle.STYLE_LEGACY;
-        case 3:
-        case "STYLE2026":
-            return FeatureSet_EnforceNamingStyle.STYLE2026;
         case -1:
         case "UNRECOGNIZED":
         default:
@@ -962,8 +952,6 @@ export function featureSet_EnforceNamingStyleToJSON(object) {
             return "STYLE2024";
         case FeatureSet_EnforceNamingStyle.STYLE_LEGACY:
             return "STYLE_LEGACY";
-        case FeatureSet_EnforceNamingStyle.STYLE2026:
-            return "STYLE2026";
         case FeatureSet_EnforceNamingStyle.UNRECOGNIZED:
         default:
             return "UNRECOGNIZED";
@@ -1022,53 +1010,6 @@ export function featureSet_VisibilityFeature_DefaultSymbolVisibilityToJSON(objec
         case FeatureSet_VisibilityFeature_DefaultSymbolVisibility.STRICT:
             return "STRICT";
         case FeatureSet_VisibilityFeature_DefaultSymbolVisibility.UNRECOGNIZED:
-        default:
-            return "UNRECOGNIZED";
-    }
-}
-export var FeatureSet_ProtoLimitsFeature_EnforceProtoLimits;
-(function (FeatureSet_ProtoLimitsFeature_EnforceProtoLimits) {
-    FeatureSet_ProtoLimitsFeature_EnforceProtoLimits[FeatureSet_ProtoLimitsFeature_EnforceProtoLimits["PROTO_LIMITS_UNKNOWN"] = 0] = "PROTO_LIMITS_UNKNOWN";
-    /**
-     * LEGACY_NO_EXPLICIT_LIMITS - Default pre-EDITION_2026: there are no limit enforcement at the protoc
-     * level. Practical limits still exist, but they will tend to fail while
-     * compiling protoc-generated code, and these limits tend to be language
-     * or toolchain specific.
-     */
-    FeatureSet_ProtoLimitsFeature_EnforceProtoLimits[FeatureSet_ProtoLimitsFeature_EnforceProtoLimits["LEGACY_NO_EXPLICIT_LIMITS"] = 1] = "LEGACY_NO_EXPLICIT_LIMITS";
-    /**
-     * PROTO_LIMITS2026 - A set of limits enforced by Edition 2026 by default. For a detailed
-     * list of all the limits please consult the Edition 2026 documentation.
-     */
-    FeatureSet_ProtoLimitsFeature_EnforceProtoLimits[FeatureSet_ProtoLimitsFeature_EnforceProtoLimits["PROTO_LIMITS2026"] = 2] = "PROTO_LIMITS2026";
-    FeatureSet_ProtoLimitsFeature_EnforceProtoLimits[FeatureSet_ProtoLimitsFeature_EnforceProtoLimits["UNRECOGNIZED"] = -1] = "UNRECOGNIZED";
-})(FeatureSet_ProtoLimitsFeature_EnforceProtoLimits || (FeatureSet_ProtoLimitsFeature_EnforceProtoLimits = {}));
-export function featureSet_ProtoLimitsFeature_EnforceProtoLimitsFromJSON(object) {
-    switch (object) {
-        case 0:
-        case "PROTO_LIMITS_UNKNOWN":
-            return FeatureSet_ProtoLimitsFeature_EnforceProtoLimits.PROTO_LIMITS_UNKNOWN;
-        case 1:
-        case "LEGACY_NO_EXPLICIT_LIMITS":
-            return FeatureSet_ProtoLimitsFeature_EnforceProtoLimits.LEGACY_NO_EXPLICIT_LIMITS;
-        case 2:
-        case "PROTO_LIMITS2026":
-            return FeatureSet_ProtoLimitsFeature_EnforceProtoLimits.PROTO_LIMITS2026;
-        case -1:
-        case "UNRECOGNIZED":
-        default:
-            return FeatureSet_ProtoLimitsFeature_EnforceProtoLimits.UNRECOGNIZED;
-    }
-}
-export function featureSet_ProtoLimitsFeature_EnforceProtoLimitsToJSON(object) {
-    switch (object) {
-        case FeatureSet_ProtoLimitsFeature_EnforceProtoLimits.PROTO_LIMITS_UNKNOWN:
-            return "PROTO_LIMITS_UNKNOWN";
-        case FeatureSet_ProtoLimitsFeature_EnforceProtoLimits.LEGACY_NO_EXPLICIT_LIMITS:
-            return "LEGACY_NO_EXPLICIT_LIMITS";
-        case FeatureSet_ProtoLimitsFeature_EnforceProtoLimits.PROTO_LIMITS2026:
-            return "PROTO_LIMITS2026";
-        case FeatureSet_ProtoLimitsFeature_EnforceProtoLimits.UNRECOGNIZED:
         default:
             return "UNRECOGNIZED";
     }
@@ -4116,7 +4057,7 @@ export const FieldOptions_EditionDefault = {
     },
 };
 function createBaseFieldOptions_FeatureSupport() {
-    return { editionIntroduced: 0, editionDeprecated: 0, deprecationWarning: "", editionRemoved: 0, removalError: "" };
+    return { editionIntroduced: 0, editionDeprecated: 0, deprecationWarning: "", editionRemoved: 0 };
 }
 export const FieldOptions_FeatureSupport = {
     encode(message, writer = new BinaryWriter()) {
@@ -4131,9 +4072,6 @@ export const FieldOptions_FeatureSupport = {
         }
         if (message.editionRemoved !== undefined && message.editionRemoved !== 0) {
             writer.uint32(32).int32(message.editionRemoved);
-        }
-        if (message.removalError !== undefined && message.removalError !== "") {
-            writer.uint32(42).string(message.removalError);
         }
         return writer;
     },
@@ -4178,13 +4116,6 @@ export const FieldOptions_FeatureSupport = {
                         message.editionRemoved = reader.int32();
                         continue;
                     }
-                    case 5: {
-                        if (tag !== 42) {
-                            break;
-                        }
-                        message.removalError = reader.string();
-                        continue;
-                    }
                 }
                 if ((tag & 7) === 4 || tag === 0) {
                     break;
@@ -4219,11 +4150,6 @@ export const FieldOptions_FeatureSupport = {
                 : isSet(object.edition_removed)
                     ? editionFromJSON(object.edition_removed)
                     : 0,
-            removalError: isSet(object.removalError)
-                ? globalThis.String(object.removalError)
-                : isSet(object.removal_error)
-                    ? globalThis.String(object.removal_error)
-                    : "",
         };
     },
     toJSON(message) {
@@ -4240,9 +4166,6 @@ export const FieldOptions_FeatureSupport = {
         if (message.editionRemoved !== undefined && message.editionRemoved !== 0) {
             obj.editionRemoved = editionToJSON(message.editionRemoved);
         }
-        if (message.removalError !== undefined && message.removalError !== "") {
-            obj.removalError = message.removalError;
-        }
         return obj;
     },
     create(base) {
@@ -4254,7 +4177,6 @@ export const FieldOptions_FeatureSupport = {
         message.editionDeprecated = object.editionDeprecated ?? 0;
         message.deprecationWarning = object.deprecationWarning ?? "";
         message.editionRemoved = object.editionRemoved ?? 0;
-        message.removalError = object.removalError ?? "";
         return message;
     },
 };
@@ -5130,7 +5052,6 @@ function createBaseFeatureSet() {
         jsonFormat: 0,
         enforceNamingStyle: 0,
         defaultSymbolVisibility: 0,
-        enforceProtoLimits: 0,
     };
 }
 export const FeatureSet = {
@@ -5158,9 +5079,6 @@ export const FeatureSet = {
         }
         if (message.defaultSymbolVisibility !== undefined && message.defaultSymbolVisibility !== 0) {
             writer.uint32(64).int32(message.defaultSymbolVisibility);
-        }
-        if (message.enforceProtoLimits !== undefined && message.enforceProtoLimits !== 0) {
-            writer.uint32(72).int32(message.enforceProtoLimits);
         }
         return writer;
     },
@@ -5233,13 +5151,6 @@ export const FeatureSet = {
                         message.defaultSymbolVisibility = reader.int32();
                         continue;
                     }
-                    case 9: {
-                        if (tag !== 72) {
-                            break;
-                        }
-                        message.enforceProtoLimits = reader.int32();
-                        continue;
-                    }
                 }
                 if ((tag & 7) === 4 || tag === 0) {
                     break;
@@ -5294,11 +5205,6 @@ export const FeatureSet = {
                 : isSet(object.default_symbol_visibility)
                     ? featureSet_VisibilityFeature_DefaultSymbolVisibilityFromJSON(object.default_symbol_visibility)
                     : 0,
-            enforceProtoLimits: isSet(object.enforceProtoLimits)
-                ? featureSet_ProtoLimitsFeature_EnforceProtoLimitsFromJSON(object.enforceProtoLimits)
-                : isSet(object.enforce_proto_limits)
-                    ? featureSet_ProtoLimitsFeature_EnforceProtoLimitsFromJSON(object.enforce_proto_limits)
-                    : 0,
         };
     },
     toJSON(message) {
@@ -5327,9 +5233,6 @@ export const FeatureSet = {
         if (message.defaultSymbolVisibility !== undefined && message.defaultSymbolVisibility !== 0) {
             obj.defaultSymbolVisibility = featureSet_VisibilityFeature_DefaultSymbolVisibilityToJSON(message.defaultSymbolVisibility);
         }
-        if (message.enforceProtoLimits !== undefined && message.enforceProtoLimits !== 0) {
-            obj.enforceProtoLimits = featureSet_ProtoLimitsFeature_EnforceProtoLimitsToJSON(message.enforceProtoLimits);
-        }
         return obj;
     },
     create(base) {
@@ -5345,7 +5248,6 @@ export const FeatureSet = {
         message.jsonFormat = object.jsonFormat ?? 0;
         message.enforceNamingStyle = object.enforceNamingStyle ?? 0;
         message.defaultSymbolVisibility = object.defaultSymbolVisibility ?? 0;
-        message.enforceProtoLimits = object.enforceProtoLimits ?? 0;
         return message;
     },
 };
@@ -5393,53 +5295,6 @@ export const FeatureSet_VisibilityFeature = {
     },
     fromPartial(_) {
         const message = createBaseFeatureSet_VisibilityFeature();
-        return message;
-    },
-};
-function createBaseFeatureSet_ProtoLimitsFeature() {
-    return {};
-}
-export const FeatureSet_ProtoLimitsFeature = {
-    encode(_, writer = new BinaryWriter()) {
-        return writer;
-    },
-    decode(input, length) {
-        const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-        const previousRecursionDepth = reader.__tsProtoDecodeDepth ?? 0;
-        if (previousRecursionDepth >= 100) {
-            throw new globalThis.Error("protobuf decode recursion limit exceeded");
-        }
-        reader.__tsProtoDecodeDepth = previousRecursionDepth + 1;
-        try {
-            const end = length === undefined ? reader.len : reader.pos + length;
-            const message = createBaseFeatureSet_ProtoLimitsFeature();
-            while (reader.pos < end) {
-                const tag = reader.uint32();
-                switch (tag >>> 3) {
-                }
-                if ((tag & 7) === 4 || tag === 0) {
-                    break;
-                }
-                reader.skip(tag & 7);
-            }
-            return message;
-        }
-        finally {
-            reader.__tsProtoDecodeDepth = previousRecursionDepth;
-        }
-    },
-    fromJSON(_) {
-        return {};
-    },
-    toJSON(_) {
-        const obj = {};
-        return obj;
-    },
-    create(base) {
-        return FeatureSet_ProtoLimitsFeature.fromPartial(base ?? {});
-    },
-    fromPartial(_) {
-        const message = createBaseFeatureSet_ProtoLimitsFeature();
         return message;
     },
 };

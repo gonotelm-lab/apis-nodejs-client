@@ -20,10 +20,6 @@
       "import": { "types": "./dist/esm/index.d.ts", "default": "./dist/esm/index.js" },
       "require": { "types": "./dist/cjs/index.d.ts", "default": "./dist/cjs/index.js" }
     },
-    "./callback": {
-      "import": { "types": "./dist/esm/callback.d.ts", "default": "./dist/esm/callback.js" },
-      "require": { "types": "./dist/cjs/callback.d.ts", "default": "./dist/cjs/callback.js" }
-    },
     "./apps/*": {
       "import": { "types": "./dist/esm/apps/*.d.ts", "default": "./dist/esm/apps/*.js" },
       "require": { "types": "./dist/cjs/apps/*.d.ts", "default": "./dist/cjs/apps/*.js" }
@@ -42,8 +38,7 @@
   "dependencies": {
     "@bufbuild/protobuf": "^2.0.0",
     "@grpc/grpc-js": "^1.12.0",
-    "nice-grpc": "^2.2.0",
-    "nice-grpc-common": "^2.0.4"
+    "nice-grpc": "^2.2.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

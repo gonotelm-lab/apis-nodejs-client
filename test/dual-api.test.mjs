@@ -1,5 +1,8 @@
 import test, { after, before } from "node:test";
 import assert from "node:assert/strict";
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   ChannelCredentials,
   Metadata as GrpcMetadata,
@@ -8,17 +11,43 @@ import {
   status,
 } from "@grpc/grpc-js";
 import { Metadata } from "nice-grpc";
-import { createChannel, createClient, createIdentityServiceClient, IdentityServiceDefinition } from "../dist/esm/index.js";
-import {
-  createCallbackClient,
-  toGrpcJsServiceDefinition,
-} from "../dist/esm/callback.js";
+import * as api from "../dist/esm/index.js";
+
+// Tests must not hard-code a proto path: every branch syncs a different tree.
+// Find the generated promise flavors, then pick one service to exercise.
+const distApps = fileURLToPath(new URL("../dist/esm/apps", import.meta.url));
+
+function findFiles(dir, name) {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) return findFiles(full, name);
+    return entry.name === name ? [full] : [];
+  });
+}
+
+const promiseModules = findFiles(distApps, "promise.js");
+assert.ok(promiseModules.length > 0, "expected at least one generated promise module");
 
 const seenMetadata = [];
+let CallbackClient;
+let createPromiseClient;
 let server;
 let port;
 
 before(async () => {
+  // Default entry: plain grpc-js. The generated client constructor carries its
+  // service definition, which is also what the server needs.
+  CallbackClient = Object.values(api).find(
+    (value) => typeof value === "function" && value.service && value.serviceName,
+  );
+  assert.ok(CallbackClient, "expected a generated grpc-js client");
+
+  const promiseModule = await import(pathToFileURL(promiseModules[0]).href);
+  createPromiseClient = Object.values(promiseModule).find(
+    (value) => typeof value === "function" && /^create\w+Client$/.test(value.name),
+  );
+  assert.ok(createPromiseClient, "expected a generated promise factory");
+
   const implementation = {
     getUser(call, callback) {
       seenMetadata.push(call.metadata.get("x-test"));
@@ -31,13 +60,26 @@ before(async () => {
       const delay = call.request.id === "slow" ? 200 : 0;
       setTimeout(() => {
         if (call.cancelled) return;
-        callback(null, { user: { id: call.request.id, nickname: "nick" } });
+        // Native grpc-js serializes what the handler returns; ts-proto's
+        // `encode` expects a complete message, so fill the defaults.
+        callback(
+          null,
+          api.GetUserResponse.fromPartial({
+            user: { id: call.request.id, nickname: "nick" },
+          }),
+        );
       }, delay);
+    },
+    setUserStatus(_call, callback) {
+      callback(
+        null,
+        api.SetUserStatusResponse.fromPartial({ user: { id: "status", nickname: "nick" } }),
+      );
     },
   };
 
   server = new Server();
-  server.addService(toGrpcJsServiceDefinition(IdentityServiceDefinition), implementation);
+  server.addService(CallbackClient.service, implementation);
   port = await new Promise((resolve, reject) => {
     server.bindAsync("127.0.0.1:0", ServerCredentials.createInsecure(), (error, boundPort) =>
       error ? reject(error) : resolve(boundPort),
@@ -51,64 +93,8 @@ after(() => {
 
 const address = () => `127.0.0.1:${port}`;
 
-test("promise entry calls the service", async () => {
-  const channel = createChannel(address(), ChannelCredentials.createInsecure());
-  const client = createClient(IdentityServiceDefinition, channel);
-
-  try {
-    const response = await client.getUser({ id: "promise" });
-    assert.equal(response.user.id, "promise");
-    assert.equal(response.user.nickname, "nick");
-  } finally {
-    channel.close();
-  }
-});
-
-test("generated per-service factory returns a promise client", async () => {
-  const client = createIdentityServiceClient(
-    address(),
-    ChannelCredentials.createInsecure(),
-  );
-
-  const response = await client.getUser({ id: "factory" });
-  assert.equal(response.user.id, "factory");
-});
-
-test("promise entry forwards metadata, deadline and abort signal", async () => {
-  const channel = createChannel(address(), ChannelCredentials.createInsecure());
-  const client = createClient(IdentityServiceDefinition, channel);
-
-  try {
-    const metadata = new Metadata();
-    metadata.set("x-test", "from-promise");
-
-    await client.getUser(
-      { id: "promise-meta" },
-      {
-        metadata,
-        deadline: Date.now() + 5000,
-        signal: new AbortController().signal,
-      },
-    );
-
-    assert.deepEqual(seenMetadata.at(-1), ["from-promise"]);
-
-    const controller = new AbortController();
-    const pending = client.getUser({ id: "slow" }, { signal: controller.signal });
-    controller.abort();
-    // nice-grpc reports caller aborts as a DOMException, not as a grpc status.
-    await assert.rejects(pending, (error) => error.name === "AbortError");
-  } finally {
-    channel.close();
-  }
-});
-
-test("callback entry calls the service with the native grpc-js API", async () => {
-  const client = createCallbackClient(
-    IdentityServiceDefinition,
-    address(),
-    ChannelCredentials.createInsecure(),
-  );
+test("default entry calls the service with the native grpc-js API", async () => {
+  const client = new CallbackClient(address(), ChannelCredentials.createInsecure());
 
   try {
     const response = await new Promise((resolve, reject) => {
@@ -140,14 +126,41 @@ test("callback entry calls the service with the native grpc-js API", async () =>
   }
 });
 
-test("both entries surface the same grpc status", async () => {
-  const channel = createChannel(address(), ChannelCredentials.createInsecure());
-  const promiseClient = createClient(IdentityServiceDefinition, channel);
-  const callbackClient = createCallbackClient(
-    IdentityServiceDefinition,
-    address(),
-    ChannelCredentials.createInsecure(),
+test("promise entry calls the service", async () => {
+  const client = createPromiseClient(address(), ChannelCredentials.createInsecure());
+
+  const response = await client.getUser({ id: "promise" });
+  assert.equal(response.user.id, "promise");
+  assert.equal(response.user.nickname, "nick");
+});
+
+test("promise entry forwards metadata, deadline and abort signal", async () => {
+  const client = createPromiseClient(address(), ChannelCredentials.createInsecure());
+
+  const metadata = new Metadata();
+  metadata.set("x-test", "from-promise");
+
+  await client.getUser(
+    { id: "promise-meta" },
+    {
+      metadata,
+      deadline: Date.now() + 5000,
+      signal: new AbortController().signal,
+    },
   );
+
+  assert.deepEqual(seenMetadata.at(-1), ["from-promise"]);
+
+  const controller = new AbortController();
+  const pending = client.getUser({ id: "slow" }, { signal: controller.signal });
+  controller.abort();
+  // nice-grpc reports caller aborts as a DOMException, not as a grpc status.
+  await assert.rejects(pending, (error) => error.name === "AbortError");
+});
+
+test("both entries surface the same grpc status", async () => {
+  const promiseClient = createPromiseClient(address(), ChannelCredentials.createInsecure());
+  const callbackClient = new CallbackClient(address(), ChannelCredentials.createInsecure());
 
   try {
     await assert.rejects(
@@ -161,17 +174,12 @@ test("both entries surface the same grpc status", async () => {
     assert.equal(callbackError.code, status.NOT_FOUND);
     assert.equal(callbackError.details, "missing user");
   } finally {
-    channel.close();
     callbackClient.close();
   }
 });
 
-test("callback entry can be cancelled with ClientUnaryCall.cancel", async () => {
-  const client = createCallbackClient(
-    IdentityServiceDefinition,
-    address(),
-    ChannelCredentials.createInsecure(),
-  );
+test("default entry can be cancelled with ClientUnaryCall.cancel", async () => {
+  const client = new CallbackClient(address(), ChannelCredentials.createInsecure());
 
   try {
     const error = await new Promise((resolve) => {

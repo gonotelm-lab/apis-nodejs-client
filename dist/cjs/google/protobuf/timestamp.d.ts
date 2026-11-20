@@ -72,8 +72,8 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
  * {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
  * seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
  * are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
- * is required. A ProtoJSON serializer should always use UTC (as indicated by
- * "Z") when printing the Timestamp type and a ProtoJSON parser should be
+ * is required. A proto3 JSON serializer should always use UTC (as indicated by
+ * "Z") when printing the Timestamp type and a proto3 JSON parser should be
  * able to accept both UTC and other timezones (as indicated by an offset).
  *
  * For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
@@ -93,7 +93,7 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 export interface Timestamp {
     /**
      * Represents seconds of UTC time since Unix epoch 1970-01-01T00:00:00Z. Must
-     * be between -62135596800 and 253402300799 inclusive (which corresponds to
+     * be between -315576000000 and 315576000000 inclusive (which corresponds to
      * 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z).
      */
     seconds: number;
@@ -111,12 +111,18 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 type DeepPartial<T> = T extends Builtin ? T : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {
     [K in keyof T]?: DeepPartial<T[K]>;
 } : Partial<T>;
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+type Exact<P, I> = P extends Builtin ? P : P & {
+    [K in keyof P as Extract<K, keyof I>]: Exact<P[K], I[K & keyof I]>;
+} & {
+    [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
+};
 interface MessageFns<T> {
     encode(message: T, writer?: BinaryWriter): BinaryWriter;
     decode(input: BinaryReader | Uint8Array, length?: number): T;
     fromJSON(object: any): T;
     toJSON(message: T): unknown;
-    create(base?: DeepPartial<T>): T;
-    fromPartial(object: DeepPartial<T>): T;
+    create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+    fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }
 export {};

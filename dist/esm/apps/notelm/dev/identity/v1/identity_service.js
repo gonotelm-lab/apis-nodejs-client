@@ -3,27 +3,28 @@
 //   protoc-gen-ts_proto  v2.18.1
 //   protoc               unknown
 // source: apps/notelm/dev/identity/v1/identity_service.proto
+/* eslint-disable */
+import { makeGenericClientConstructor, } from "@grpc/grpc-js";
 import { GetUserRequest, GetUserResponse, SetUserStatusRequest, SetUserStatusResponse } from "./user.js";
-export const IdentityServiceDefinition = {
-    name: "IdentityService",
-    fullName: "apps.notelm.dev.identity.v1.IdentityService",
-    methods: {
-        getUser: {
-            name: "GetUser",
-            requestType: GetUserRequest,
-            requestStream: false,
-            responseType: GetUserResponse,
-            responseStream: false,
-            options: {},
-        },
-        setUserStatus: {
-            name: "SetUserStatus",
-            requestType: SetUserStatusRequest,
-            requestStream: false,
-            responseType: SetUserStatusResponse,
-            responseStream: false,
-            options: {},
-        },
+export const IdentityServiceService = {
+    getUser: {
+        path: "/apps.notelm.dev.identity.v1.IdentityService/GetUser",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value) => Buffer.from(GetUserRequest.encode(value).finish()),
+        requestDeserialize: (value) => GetUserRequest.decode(value),
+        responseSerialize: (value) => Buffer.from(GetUserResponse.encode(value).finish()),
+        responseDeserialize: (value) => GetUserResponse.decode(value),
+    },
+    setUserStatus: {
+        path: "/apps.notelm.dev.identity.v1.IdentityService/SetUserStatus",
+        requestStream: false,
+        responseStream: false,
+        requestSerialize: (value) => Buffer.from(SetUserStatusRequest.encode(value).finish()),
+        requestDeserialize: (value) => SetUserStatusRequest.decode(value),
+        responseSerialize: (value) => Buffer.from(SetUserStatusResponse.encode(value).finish()),
+        responseDeserialize: (value) => SetUserStatusResponse.decode(value),
     },
 };
+export const IdentityServiceClient = makeGenericClientConstructor(IdentityServiceService, "apps.notelm.dev.identity.v1.IdentityService");
 //# sourceMappingURL=identity_service.js.map
