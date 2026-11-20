@@ -110,6 +110,15 @@ Deep imports map one-to-one with proto files:
 import type { User } from "@gonotelm-lab/apis-nodejs-client/apps/notelm/dev/identity/v1/user"
 ```
 
+## Examples
+
+ESM usage sketches live under [`examples/`](./examples) (illustrative, not a runnable harness):
+
+- [`examples/callback.ts`](./examples/callback.ts) — native grpc-js callback client
+- [`examples/promise.ts`](./examples/promise.ts) — Promise factory + per-call options
+- [`examples/client-options.ts`](./examples/client-options.ts) — full `ClientOptions` (interceptors)
+- [`examples/call-options.ts`](./examples/call-options.ts) — full per-call `CallOptions`
+
 ## Layout
 
 - `src/apps/**` — generated protobuf messages and native grpc-js services (the default entry).
@@ -117,6 +126,7 @@ import type { User } from "@gonotelm-lab/apis-nodejs-client/apps/notelm/dev/iden
 - `src/google/**`, `src/buf/**` — generated well-known types and validation code.
 - `src/index.ts` — generated flat re-exports of `src/apps/**`.
 - `scripts/build-index.mjs` — generates `src/index.ts` and the per-service `promise.ts` modules during the build.
+- `examples/` — ESM usage sketches (not published in the npm tarball).
 - `dist/cjs`, `dist/esm` — built JavaScript and type declarations.
 
 ## Tests
