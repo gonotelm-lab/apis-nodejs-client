@@ -47,24 +47,56 @@ call.cancel()
 
 ### Promise
 
-Built on [`nice-grpc`](https://github.com/deeplay-io/nice-grpc). Unary calls return `Promise`; streaming calls return `AsyncIterable`.
+A thin Promise adapter over the same generated grpc-js client. Unary calls return `Promise`; streaming calls return `AsyncIterable`. Per-call options are `{ metadata, deadline, signal }`, using the same grpc-js `Metadata` type as the callback client.
 
 ```ts
+import { ChannelCredentials } from "@grpc/grpc-js"
 import { createIdentityServiceClient } from "@gonotelm-lab/apis-nodejs-client/apps/notelm/dev/identity/v1/identity_service/promise"
 
-const client = createIdentityServiceClient("http://127.0.0.1:7100")
+const client = createIdentityServiceClient(
+  "127.0.0.1:7100",
+  ChannelCredentials.createInsecure(),
+)
 
 const { user } = await client.getUser({ id: "42" })
 ```
 
-The factory creates its own channel. To control the channel lifecycle, pass the generated service definition to `nice-grpc` yourself:
+The factory takes the **full grpc-js [`ClientOptions`](https://github.com/grpc/grpc-node/blob/master/packages/grpc-js/src/client.ts)**, exactly like the callback client: channel options, `interceptors`, `interceptor_providers`, `channelOverride`, `channelFactoryOverride`, and `callInvocationTransformer` all work the same way.
 
 ```ts
-import { createChannel, createClient } from "nice-grpc"
-import { IdentityServiceService } from "@gonotelm-lab/apis-nodejs-client/apps/notelm/dev/identity/v1/identity_service"
+import {
+  ChannelCredentials,
+  InterceptingCall,
+  type Interceptor,
+} from "@grpc/grpc-js"
+import { createIdentityServiceClient } from "@gonotelm-lab/apis-nodejs-client/apps/notelm/dev/identity/v1/identity_service/promise"
 
-const channel = createChannel("http://127.0.0.1:7100")
-const client = createClient(IdentityServiceService, channel)
+const logging: Interceptor = (options, nextCall) =>
+  new InterceptingCall(nextCall(options), {
+    start(metadata, listener, next) {
+      console.log(options.method_definition.path)
+      next(metadata, listener)
+    },
+  })
+
+const client = createIdentityServiceClient(
+  "127.0.0.1:7100",
+  ChannelCredentials.createInsecure(),
+  { interceptors: [logging] },
+)
+```
+
+To control the channel lifecycle, pass `channelOverride` (the client will not own/close it):
+
+```ts
+import { Channel, ChannelCredentials } from "@grpc/grpc-js"
+
+const channel = new Channel("127.0.0.1:7100", ChannelCredentials.createInsecure())
+const client = createIdentityServiceClient(
+  "127.0.0.1:7100",
+  ChannelCredentials.createInsecure(),
+  { channelOverride: channel },
+)
 
 const { user } = await client.getUser({ id: "42" })
 channel.close()
@@ -94,7 +126,7 @@ npm run build
 npm test
 ```
 
-The test suite starts a real gRPC server and exercises the default grpc-js entry, the promise entry, metadata, deadlines, status propagation, and `cancel()`.
+The test suite starts a real gRPC server and exercises the default grpc-js entry, the promise entry, metadata, deadlines, status propagation, `cancel()`, and full `ClientOptions` (interceptors).
 
 ## Publishing
 

@@ -75,11 +75,14 @@ function importSpecifiers(source) {
   return specifiers;
 }
 
-function relativeSpecifier(fromDir, serviceDir, specifier) {
-  const target = resolve(serviceDir, specifier).split(sep).join("/");
+function relativeFile(fromDir, target) {
   let rel = relative(fromDir, target).split(sep).join("/");
   if (!rel.startsWith(".")) rel = `./${rel}`;
   return rel;
+}
+
+function relativeSpecifier(fromDir, serviceDir, specifier) {
+  return relativeFile(fromDir, resolve(serviceDir, specifier).split(sep).join("/"));
 }
 
 function promiseSignature(method) {
@@ -111,12 +114,18 @@ for (const file of generatedFiles) {
   const outDir = join(apps, file.slice(0, -".ts".length));
   const usedTypes = new Set();
   const serviceBlocks = [];
+  const serviceImports = [];
+  const serviceDefinitions = [];
 
   for (const definition of services) {
     // ts-proto names grpc-js definitions `<Service>Service`, so one `Service`
     // suffix yields the protobuf service name.
     const service = definition.replace(/Service$/, "");
     const methods = parseInterfaceMembers(source, service);
+    const grpcClient = `Grpc${service}Client`;
+
+    serviceImports.push(`${service}Client as ${grpcClient}`);
+    serviceDefinitions.push(definition);
 
     const signatures = methods.flatMap((method) => {
       const line = promiseSignature(method);
@@ -134,10 +143,13 @@ for (const file of generatedFiles) {
       "",
       `export function create${service}Client(`,
       "  address: string,",
-      "  credentials?: ChannelCredentials,",
-      "  options?: ChannelOptions,",
+      "  credentials: ChannelCredentials = grpcCredentials.createInsecure(),",
+      "  options?: ClientOptions,",
       `): ${service}Client {`,
-      `  return createClient(${definition}, createChannel(address, credentials, options));`,
+      // Reuse the native generated client, so the full grpc-js ClientOptions
+      // (interceptors, channel overrides, channel options, ...) applies.
+      `  const client = new ${grpcClient}(address, credentials, options);`,
+      `  return createPromiseClient(client, ${definition}) as unknown as ${service}Client;`,
       "}",
     );
   }
@@ -150,14 +162,19 @@ for (const file of generatedFiles) {
     importsBySpecifier.set(rel, [...(importsBySpecifier.get(rel) ?? []), type]);
   }
 
+  const runtimeSpecifier = relativeFile(outDir, join(src, "promise-runtime.js"));
+
   const parts = [
     MARKER,
-    'import { createChannel, createClient } from "nice-grpc";',
-    'import type { CallOptions, ChannelCredentials, ChannelOptions } from "nice-grpc";',
-    `import { ${services.join(", ")} } from "../${basename(file, ".ts")}.js";`,
+    'import { credentials as grpcCredentials } from "@grpc/grpc-js";',
+    'import type { ChannelCredentials, ClientOptions } from "@grpc/grpc-js";',
+    `import { ${[...serviceImports, ...serviceDefinitions].join(", ")} } from "../${basename(file, ".ts")}.js";`,
+    `import { createPromiseClient, type CallOptions } from "${runtimeSpecifier}";`,
     ...[...importsBySpecifier].map(
       ([specifier, types]) => `import type { ${types.join(", ")} } from "${specifier}";`,
     ),
+    "",
+    "export type { ClientOptions };",
     "",
     ...serviceBlocks,
   ];

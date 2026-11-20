@@ -10,7 +10,6 @@ import {
   ServerCredentials,
   status,
 } from "@grpc/grpc-js";
-import { Metadata } from "nice-grpc";
 import * as api from "../dist/esm/index.js";
 
 // Tests must not hard-code a proto path: every branch syncs a different tree.
@@ -137,7 +136,7 @@ test("promise entry calls the service", async () => {
 test("promise entry forwards metadata, deadline and abort signal", async () => {
   const client = createPromiseClient(address(), ChannelCredentials.createInsecure());
 
-  const metadata = new Metadata();
+  const metadata = new GrpcMetadata();
   metadata.set("x-test", "from-promise");
 
   await client.getUser(
@@ -154,8 +153,26 @@ test("promise entry forwards metadata, deadline and abort signal", async () => {
   const controller = new AbortController();
   const pending = client.getUser({ id: "slow" }, { signal: controller.signal });
   controller.abort();
-  // nice-grpc reports caller aborts as a DOMException, not as a grpc status.
-  await assert.rejects(pending, (error) => error.name === "AbortError");
+  // The Promise flavor wraps the native client, so an abort is the same
+  // grpc status a cancelled callback call reports.
+  await assert.rejects(pending, (error) => error.code === status.CANCELLED);
+});
+
+test("promise entry accepts the full grpc-js ClientOptions", async () => {
+  const intercepted = [];
+  const interceptor = (options, nextCall) => {
+    intercepted.push(options.method_definition.path);
+    return nextCall(options);
+  };
+
+  const client = createPromiseClient(address(), ChannelCredentials.createInsecure(), {
+    interceptors: [interceptor],
+  });
+
+  const response = await client.getUser({ id: "promise-interceptor" });
+  assert.equal(response.user.id, "promise-interceptor");
+  assert.equal(intercepted.length, 1);
+  assert.match(intercepted[0], /\/GetUser$/);
 });
 
 test("both entries surface the same grpc status", async () => {
