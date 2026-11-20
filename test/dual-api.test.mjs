@@ -175,6 +175,27 @@ test("promise entry accepts the full grpc-js ClientOptions", async () => {
   assert.match(intercepted[0], /\/GetUser$/);
 });
 
+test("promise entry forwards the full grpc-js CallOptions", async () => {
+  const client = createPromiseClient(address(), ChannelCredentials.createInsecure());
+  const intercepted = [];
+  const interceptor = (options, nextCall) => {
+    intercepted.push(options.method_definition.path);
+    return nextCall(options);
+  };
+
+  const response = await client.getUser(
+    { id: "promise-call-interceptor" },
+    {
+      deadline: Date.now() + 5000,
+      interceptors: [interceptor],
+    },
+  );
+
+  assert.equal(response.user.id, "promise-call-interceptor");
+  assert.equal(intercepted.length, 1);
+  assert.match(intercepted[0], /\/GetUser$/);
+});
+
 test("both entries surface the same grpc status", async () => {
   const promiseClient = createPromiseClient(address(), ChannelCredentials.createInsecure());
   const callbackClient = new CallbackClient(address(), ChannelCredentials.createInsecure());

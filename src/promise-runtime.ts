@@ -17,14 +17,15 @@ import type {
 } from "@grpc/grpc-js";
 import { Metadata as GrpcMetadata } from "@grpc/grpc-js";
 
-export interface CallOptions {
+// grpc-js keeps Metadata as a separate argument and has no AbortSignal field.
+// Promise calls fold those into one options object, then strip them before the
+// native CallOptions are forwarded.
+export type CallOptions = GrpcCallOptions & {
   /** Per-call metadata (grpc-js `Metadata`, same as the callback client). */
   metadata?: Metadata;
-  /** Absolute deadline, as a `Date` or a number of milliseconds since epoch. */
-  deadline?: number | Date;
   /** Cancels the call when aborted. */
   signal?: AbortSignal;
-}
+};
 
 type AnyClient = Record<string, (...args: any[]) => any>;
 
@@ -36,7 +37,8 @@ interface ReadableStreamLike<T> {
 }
 
 function grpcCallOptions(options: CallOptions): GrpcCallOptions {
-  return options.deadline === undefined ? {} : { deadline: options.deadline };
+  const { metadata: _metadata, signal: _signal, ...rest } = options;
+  return rest;
 }
 
 function metadataOf(options: CallOptions): Metadata {

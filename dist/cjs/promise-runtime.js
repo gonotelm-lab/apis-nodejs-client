@@ -10,7 +10,8 @@ exports.createPromiseClient = createPromiseClient;
 const node_events_1 = require("node:events");
 const grpc_js_1 = require("@grpc/grpc-js");
 function grpcCallOptions(options) {
-    return options.deadline === undefined ? {} : { deadline: options.deadline };
+    const { metadata: _metadata, signal: _signal, ...rest } = options;
+    return rest;
 }
 function metadataOf(options) {
     return options.metadata ?? new grpc_js_1.Metadata();

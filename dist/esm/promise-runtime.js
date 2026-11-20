@@ -7,7 +7,8 @@
 import { once } from "node:events";
 import { Metadata as GrpcMetadata } from "@grpc/grpc-js";
 function grpcCallOptions(options) {
-    return options.deadline === undefined ? {} : { deadline: options.deadline };
+    const { metadata: _metadata, signal: _signal, ...rest } = options;
+    return rest;
 }
 function metadataOf(options) {
     return options.metadata ?? new GrpcMetadata();

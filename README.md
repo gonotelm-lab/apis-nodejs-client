@@ -47,7 +47,7 @@ call.cancel()
 
 ### Promise
 
-A thin Promise adapter over the same generated grpc-js client. Unary calls return `Promise`; streaming calls return `AsyncIterable`. Per-call options are `{ metadata, deadline, signal }`, using the same grpc-js `Metadata` type as the callback client.
+A thin Promise adapter over the same generated grpc-js client. Unary calls return `Promise`; streaming calls return `AsyncIterable`. Per-call options are the full grpc-js [`CallOptions`](https://github.com/grpc/grpc-node/blob/master/packages/grpc-js/src/client.ts) plus `metadata` and `signal` (callback keeps those as a separate argument / `call.cancel()`).
 
 ```ts
 import { ChannelCredentials } from "@grpc/grpc-js"
@@ -126,7 +126,7 @@ npm run build
 npm test
 ```
 
-The test suite starts a real gRPC server and exercises the default grpc-js entry, the promise entry, metadata, deadlines, status propagation, `cancel()`, and full `ClientOptions` (interceptors).
+The test suite starts a real gRPC server and exercises the default grpc-js entry, the promise entry, metadata, deadlines, status propagation, `cancel()`, full `ClientOptions` (client interceptors), and full per-call `CallOptions` (call interceptors).
 
 ## Publishing
 
