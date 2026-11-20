@@ -58,13 +58,13 @@ for (const file of generatedFiles) {
     const service = definition.replace(/Service$/, "");
     lines.push(
       "",
-      `export type ${service}PromiseClient = Client<typeof ${definition}>;`,
+      `export type ${service}Client = Client<typeof ${definition}>;`,
       "",
       `export function create${service}Client(`,
       "  address: string,",
       "  credentials?: ChannelCredentials,",
       "  options?: ChannelOptions,",
-      `): ${service}PromiseClient {`,
+      `): ${service}Client {`,
       `  return createClient(${definition}, createChannel(address, credentials, options));`,
       "}",
     );

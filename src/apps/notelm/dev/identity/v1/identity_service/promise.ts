@@ -3,12 +3,12 @@ import { createChannel, createClient } from "nice-grpc";
 import type { ChannelCredentials, ChannelOptions, Client } from "nice-grpc";
 import { IdentityServiceService } from "../identity_service.js";
 
-export type IdentityServicePromiseClient = Client<typeof IdentityServiceService>;
+export type IdentityServiceClient = Client<typeof IdentityServiceService>;
 
 export function createIdentityServiceClient(
   address: string,
   credentials?: ChannelCredentials,
   options?: ChannelOptions,
-): IdentityServicePromiseClient {
+): IdentityServiceClient {
   return createClient(IdentityServiceService, createChannel(address, credentials, options));
 }
