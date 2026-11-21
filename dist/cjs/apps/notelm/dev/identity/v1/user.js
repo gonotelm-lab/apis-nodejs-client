@@ -57,6 +57,7 @@ function createBaseUser() {
         avatar: "",
         createdAt: undefined,
         updatedAt: undefined,
+        hasPassword: false,
     };
 }
 exports.User = {
@@ -81,6 +82,9 @@ exports.User = {
         }
         if (message.updatedAt !== undefined) {
             timestamp_js_1.Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(58).fork()).join();
+        }
+        if (message.hasPassword !== false) {
+            writer.uint32(64).bool(message.hasPassword);
         }
         return writer;
     },
@@ -146,6 +150,13 @@ exports.User = {
                         message.updatedAt = fromTimestamp(timestamp_js_1.Timestamp.decode(reader, reader.uint32()));
                         continue;
                     }
+                    case 8: {
+                        if (tag !== 64) {
+                            break;
+                        }
+                        message.hasPassword = reader.bool();
+                        continue;
+                    }
                 }
                 if ((tag & 7) === 4 || tag === 0) {
                     break;
@@ -179,6 +190,11 @@ exports.User = {
                 : isSet(object.updated_at)
                     ? fromJsonTimestamp(object.updated_at)
                     : undefined,
+            hasPassword: isSet(object.hasPassword)
+                ? globalThis.Boolean(object.hasPassword)
+                : isSet(object.has_password)
+                    ? globalThis.Boolean(object.has_password)
+                    : false,
         };
     },
     toJSON(message) {
@@ -204,6 +220,9 @@ exports.User = {
         if (message.updatedAt !== undefined) {
             obj.updatedAt = message.updatedAt.toISOString();
         }
+        if (message.hasPassword !== false) {
+            obj.hasPassword = message.hasPassword;
+        }
         return obj;
     },
     create(base) {
@@ -218,6 +237,7 @@ exports.User = {
         message.avatar = object.avatar ?? "";
         message.createdAt = object.createdAt ?? undefined;
         message.updatedAt = object.updatedAt ?? undefined;
+        message.hasPassword = object.hasPassword ?? false;
         return message;
     },
 };

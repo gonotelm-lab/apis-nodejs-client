@@ -16,6 +16,7 @@ export interface User {
   avatar: string;
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
+  hasPassword: boolean;
 }
 
 export enum User_Status {
@@ -83,6 +84,7 @@ function createBaseUser(): User {
     avatar: "",
     createdAt: undefined,
     updatedAt: undefined,
+    hasPassword: false,
   };
 }
 
@@ -108,6 +110,9 @@ export const User: MessageFns<User> = {
     }
     if (message.updatedAt !== undefined) {
       Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(58).fork()).join();
+    }
+    if (message.hasPassword !== false) {
+      writer.uint32(64).bool(message.hasPassword);
     }
     return writer;
   },
@@ -181,6 +186,14 @@ export const User: MessageFns<User> = {
             message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
             continue;
           }
+          case 8: {
+            if (tag !== 64) {
+              break;
+            }
+
+            message.hasPassword = reader.bool();
+            continue;
+          }
         }
         if ((tag & 7) === 4 || tag === 0) {
           break;
@@ -214,6 +227,11 @@ export const User: MessageFns<User> = {
         : isSet(object.updated_at)
         ? fromJsonTimestamp(object.updated_at)
         : undefined,
+      hasPassword: isSet(object.hasPassword)
+        ? globalThis.Boolean(object.hasPassword)
+        : isSet(object.has_password)
+        ? globalThis.Boolean(object.has_password)
+        : false,
     };
   },
 
@@ -240,6 +258,9 @@ export const User: MessageFns<User> = {
     if (message.updatedAt !== undefined) {
       obj.updatedAt = message.updatedAt.toISOString();
     }
+    if (message.hasPassword !== false) {
+      obj.hasPassword = message.hasPassword;
+    }
     return obj;
   },
 
@@ -255,6 +276,7 @@ export const User: MessageFns<User> = {
     message.avatar = object.avatar ?? "";
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
+    message.hasPassword = object.hasPassword ?? false;
     return message;
   },
 };

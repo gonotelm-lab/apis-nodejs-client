@@ -7,6 +7,7 @@ export interface User {
     avatar: string;
     createdAt: Date | undefined;
     updatedAt: Date | undefined;
+    hasPassword: boolean;
 }
 export declare enum User_Status {
     STATUS_UNSPECIFIED = 0,
