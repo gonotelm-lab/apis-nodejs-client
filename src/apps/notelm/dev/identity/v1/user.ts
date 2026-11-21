@@ -8,6 +8,58 @@
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Timestamp } from "../../../../../google/protobuf/timestamp.js";
 
+/** Identity 账号已绑定的一条三方身份 */
+export interface Identity {
+  /** 绑定记录 id（解绑时用） */
+  id: string;
+  provider: Identity_Provider;
+  /** 三方侧 subject（全局唯一键的一部分） */
+  subject: string;
+  providerEmail: string;
+  providerEmailVerified: boolean;
+  boundAt: Date | undefined;
+  lastLoginAt: Date | undefined;
+}
+
+export enum Identity_Provider {
+  PROVIDER_UNSPECIFIED = 0,
+  PROVIDER_GITHUB = 1,
+  PROVIDER_GOOGLE = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function identity_ProviderFromJSON(object: any): Identity_Provider {
+  switch (object) {
+    case 0:
+    case "PROVIDER_UNSPECIFIED":
+      return Identity_Provider.PROVIDER_UNSPECIFIED;
+    case 1:
+    case "PROVIDER_GITHUB":
+      return Identity_Provider.PROVIDER_GITHUB;
+    case 2:
+    case "PROVIDER_GOOGLE":
+      return Identity_Provider.PROVIDER_GOOGLE;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return Identity_Provider.UNRECOGNIZED;
+  }
+}
+
+export function identity_ProviderToJSON(object: Identity_Provider): string {
+  switch (object) {
+    case Identity_Provider.PROVIDER_UNSPECIFIED:
+      return "PROVIDER_UNSPECIFIED";
+    case Identity_Provider.PROVIDER_GITHUB:
+      return "PROVIDER_GITHUB";
+    case Identity_Provider.PROVIDER_GOOGLE:
+      return "PROVIDER_GOOGLE";
+    case Identity_Provider.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 export interface User {
   id: string;
   nickname: string;
@@ -17,6 +69,7 @@ export interface User {
   createdAt: Date | undefined;
   updatedAt: Date | undefined;
   hasPassword: boolean;
+  identities: Identity[];
 }
 
 export enum User_Status {
@@ -75,6 +128,195 @@ export interface SetUserStatusResponse {
   user: User | undefined;
 }
 
+function createBaseIdentity(): Identity {
+  return {
+    id: "",
+    provider: 0,
+    subject: "",
+    providerEmail: "",
+    providerEmailVerified: false,
+    boundAt: undefined,
+    lastLoginAt: undefined,
+  };
+}
+
+export const Identity: MessageFns<Identity> = {
+  encode(message: Identity, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.provider !== 0) {
+      writer.uint32(16).int32(message.provider);
+    }
+    if (message.subject !== "") {
+      writer.uint32(26).string(message.subject);
+    }
+    if (message.providerEmail !== "") {
+      writer.uint32(34).string(message.providerEmail);
+    }
+    if (message.providerEmailVerified !== false) {
+      writer.uint32(40).bool(message.providerEmailVerified);
+    }
+    if (message.boundAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.boundAt), writer.uint32(50).fork()).join();
+    }
+    if (message.lastLoginAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.lastLoginAt), writer.uint32(58).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): Identity {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    const previousRecursionDepth = (reader as any).__tsProtoDecodeDepth ?? 0;
+    if (previousRecursionDepth >= 100) {
+      throw new globalThis.Error("protobuf decode recursion limit exceeded");
+    }
+    (reader as any).__tsProtoDecodeDepth = previousRecursionDepth + 1;
+    try {
+      const end = length === undefined ? reader.len : reader.pos + length;
+      const message = createBaseIdentity();
+      while (reader.pos < end) {
+        const tag = reader.uint32();
+        switch (tag >>> 3) {
+          case 1: {
+            if (tag !== 10) {
+              break;
+            }
+
+            message.id = reader.string();
+            continue;
+          }
+          case 2: {
+            if (tag !== 16) {
+              break;
+            }
+
+            message.provider = reader.int32() as any;
+            continue;
+          }
+          case 3: {
+            if (tag !== 26) {
+              break;
+            }
+
+            message.subject = reader.string();
+            continue;
+          }
+          case 4: {
+            if (tag !== 34) {
+              break;
+            }
+
+            message.providerEmail = reader.string();
+            continue;
+          }
+          case 5: {
+            if (tag !== 40) {
+              break;
+            }
+
+            message.providerEmailVerified = reader.bool();
+            continue;
+          }
+          case 6: {
+            if (tag !== 50) {
+              break;
+            }
+
+            message.boundAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+            continue;
+          }
+          case 7: {
+            if (tag !== 58) {
+              break;
+            }
+
+            message.lastLoginAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+            continue;
+          }
+        }
+        if ((tag & 7) === 4 || tag === 0) {
+          break;
+        }
+        reader.skip(tag & 7);
+      }
+      return message;
+    } finally {
+      (reader as any).__tsProtoDecodeDepth = previousRecursionDepth;
+    }
+  },
+
+  fromJSON(object: any): Identity {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      provider: isSet(object.provider) ? identity_ProviderFromJSON(object.provider) : 0,
+      subject: isSet(object.subject) ? globalThis.String(object.subject) : "",
+      providerEmail: isSet(object.providerEmail)
+        ? globalThis.String(object.providerEmail)
+        : isSet(object.provider_email)
+        ? globalThis.String(object.provider_email)
+        : "",
+      providerEmailVerified: isSet(object.providerEmailVerified)
+        ? globalThis.Boolean(object.providerEmailVerified)
+        : isSet(object.provider_email_verified)
+        ? globalThis.Boolean(object.provider_email_verified)
+        : false,
+      boundAt: isSet(object.boundAt)
+        ? fromJsonTimestamp(object.boundAt)
+        : isSet(object.bound_at)
+        ? fromJsonTimestamp(object.bound_at)
+        : undefined,
+      lastLoginAt: isSet(object.lastLoginAt)
+        ? fromJsonTimestamp(object.lastLoginAt)
+        : isSet(object.last_login_at)
+        ? fromJsonTimestamp(object.last_login_at)
+        : undefined,
+    };
+  },
+
+  toJSON(message: Identity): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.provider !== 0) {
+      obj.provider = identity_ProviderToJSON(message.provider);
+    }
+    if (message.subject !== "") {
+      obj.subject = message.subject;
+    }
+    if (message.providerEmail !== "") {
+      obj.providerEmail = message.providerEmail;
+    }
+    if (message.providerEmailVerified !== false) {
+      obj.providerEmailVerified = message.providerEmailVerified;
+    }
+    if (message.boundAt !== undefined) {
+      obj.boundAt = message.boundAt.toISOString();
+    }
+    if (message.lastLoginAt !== undefined) {
+      obj.lastLoginAt = message.lastLoginAt.toISOString();
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Identity>, I>>(base?: I): Identity {
+    return Identity.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<Identity>, I>>(object: I): Identity {
+    const message = createBaseIdentity();
+    message.id = object.id ?? "";
+    message.provider = object.provider ?? 0;
+    message.subject = object.subject ?? "";
+    message.providerEmail = object.providerEmail ?? "";
+    message.providerEmailVerified = object.providerEmailVerified ?? false;
+    message.boundAt = object.boundAt ?? undefined;
+    message.lastLoginAt = object.lastLoginAt ?? undefined;
+    return message;
+  },
+};
+
 function createBaseUser(): User {
   return {
     id: "",
@@ -85,6 +327,7 @@ function createBaseUser(): User {
     createdAt: undefined,
     updatedAt: undefined,
     hasPassword: false,
+    identities: [],
   };
 }
 
@@ -113,6 +356,9 @@ export const User: MessageFns<User> = {
     }
     if (message.hasPassword !== false) {
       writer.uint32(64).bool(message.hasPassword);
+    }
+    for (const v of message.identities) {
+      Identity.encode(v!, writer.uint32(74).fork()).join();
     }
     return writer;
   },
@@ -194,6 +440,14 @@ export const User: MessageFns<User> = {
             message.hasPassword = reader.bool();
             continue;
           }
+          case 9: {
+            if (tag !== 74) {
+              break;
+            }
+
+            message.identities.push(Identity.decode(reader, reader.uint32()));
+            continue;
+          }
         }
         if ((tag & 7) === 4 || tag === 0) {
           break;
@@ -232,6 +486,9 @@ export const User: MessageFns<User> = {
         : isSet(object.has_password)
         ? globalThis.Boolean(object.has_password)
         : false,
+      identities: globalThis.Array.isArray(object?.identities)
+        ? object.identities.map((e: any) => Identity.fromJSON(e))
+        : [],
     };
   },
 
@@ -261,6 +518,9 @@ export const User: MessageFns<User> = {
     if (message.hasPassword !== false) {
       obj.hasPassword = message.hasPassword;
     }
+    if (message.identities?.length) {
+      obj.identities = message.identities.map((e) => Identity.toJSON(e));
+    }
     return obj;
   },
 
@@ -277,6 +537,7 @@ export const User: MessageFns<User> = {
     message.createdAt = object.createdAt ?? undefined;
     message.updatedAt = object.updatedAt ?? undefined;
     message.hasPassword = object.hasPassword ?? false;
+    message.identities = object.identities?.map((e) => Identity.fromPartial(e)) || [];
     return message;
   },
 };

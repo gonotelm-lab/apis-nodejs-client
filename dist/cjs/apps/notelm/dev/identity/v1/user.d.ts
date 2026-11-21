@@ -1,4 +1,24 @@
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
+/** Identity 账号已绑定的一条三方身份 */
+export interface Identity {
+    /** 绑定记录 id（解绑时用） */
+    id: string;
+    provider: Identity_Provider;
+    /** 三方侧 subject（全局唯一键的一部分） */
+    subject: string;
+    providerEmail: string;
+    providerEmailVerified: boolean;
+    boundAt: Date | undefined;
+    lastLoginAt: Date | undefined;
+}
+export declare enum Identity_Provider {
+    PROVIDER_UNSPECIFIED = 0,
+    PROVIDER_GITHUB = 1,
+    PROVIDER_GOOGLE = 2,
+    UNRECOGNIZED = -1
+}
+export declare function identity_ProviderFromJSON(object: any): Identity_Provider;
+export declare function identity_ProviderToJSON(object: Identity_Provider): string;
 export interface User {
     id: string;
     nickname: string;
@@ -8,6 +28,7 @@ export interface User {
     createdAt: Date | undefined;
     updatedAt: Date | undefined;
     hasPassword: boolean;
+    identities: Identity[];
 }
 export declare enum User_Status {
     STATUS_UNSPECIFIED = 0,
@@ -30,6 +51,7 @@ export interface SetUserStatusRequest {
 export interface SetUserStatusResponse {
     user: User | undefined;
 }
+export declare const Identity: MessageFns<Identity>;
 export declare const User: MessageFns<User>;
 export declare const GetUserRequest: MessageFns<GetUserRequest>;
 export declare const GetUserResponse: MessageFns<GetUserResponse>;
